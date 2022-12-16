@@ -47,8 +47,9 @@
         "illuminate/pagination": "^6.0",
         "illuminate/support": "^6.0",
         "neomerx/json-api": "^1.0.3",
+        "nyholm/psr7": "^1.5",
         "ramsey/uuid": "^3.0",
-        "symfony/psr-http-message-bridge": "^1.0",
+        "symfony/psr-http-message-bridge": "^2.0",
         "zendframework/zend-diactoros": "^1.0|^2.0"
     },
     "require-dev": {
