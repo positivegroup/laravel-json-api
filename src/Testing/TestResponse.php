@@ -17,10 +17,10 @@
 
 namespace CloudCreativity\LaravelJsonApi\Testing;
 
+use Illuminate\Testing\TestResponse as BaseTestResponse;
 use CloudCreativity\JsonApi\Testing\Compare;
 use CloudCreativity\JsonApi\Testing\Concerns\HasHttpAssertions;
 use CloudCreativity\JsonApi\Testing\Document;
-use Illuminate\Foundation\Testing\TestResponse as BaseTestResponse;
 use Illuminate\Http\Response;
 use PHPUnit\Framework\Assert;
 
