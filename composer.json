@@ -32,23 +32,23 @@
         },
         {
             "type": "git",
-            "url": "https://github.com/michaeldyrynda/json-api-testing"
+            "url": "https://github.com/positivegroup/json-api-testing.git"
         }
     ],
     "require": {
         "php": "^8.0",
         "ext-json": "*",
         "cloudcreativity/utils-object": "dev-1.x-php80",
-        "illuminate/console": "^6.0|^7.0",
-        "illuminate/contracts": "^6.0|^7.0",
-        "illuminate/database": "^6.0|^7.0",
-        "illuminate/filesystem": "^6.0|^7.0",
-        "illuminate/http": "^6.0|^7.0",
-        "illuminate/pagination": "^6.0|^7.0",
-        "illuminate/support": "^6.0|^7.0",
+        "illuminate/console": "^6.0|^7.0|^8.0",
+        "illuminate/contracts": "^6.0|^7.0|^8.0",
+        "illuminate/database": "^6.0|^7.0|^8.0",
+        "illuminate/filesystem": "^6.0|^7.0|^8.0",
+        "illuminate/http": "^6.0|^7.0|^8.0",
+        "illuminate/pagination": "^6.0|^7.0|^8.0",
+        "illuminate/support": "^6.0|^7.0|^8.0",
         "neomerx/json-api": "^1.0.3",
         "nyholm/psr7": "^1.5",
-        "ramsey/uuid": "^3.0",
+        "ramsey/uuid": "^3.0|^4.0",
         "symfony/psr-http-message-bridge": "^2.0",
         "laminas/laminas-diactoros": "^2.0"
     },
