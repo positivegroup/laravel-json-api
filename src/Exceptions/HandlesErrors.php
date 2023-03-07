@@ -27,15 +27,13 @@ use Illuminate\Http\Response;
 use Neomerx\JsonApi\Contracts\Document\ErrorInterface;
 use Neomerx\JsonApi\Exceptions\JsonApiException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Throwable;
 
 /**
  * Trait HandlesErrors
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 trait HandlesErrors
 {
-
     /**
      * Does the HTTP request require a JSON API error response?
      *
@@ -43,11 +41,11 @@ trait HandlesErrors
      * for the client. We need to do this if the client has requested JSON
      * API via its Accept header.
      *
-     * @param Request $request
-     * @param Exception $e
+     * @param  Request  $request
+     * @param  Throwable  $e
      * @return bool
      */
-    public function isJsonApi($request, Exception $e)
+    public function isJsonApi($request, Throwable $e)
     {
         if (Helpers::wantsJsonApi($request)) {
             return true;
@@ -62,11 +60,11 @@ trait HandlesErrors
     /**
      * Render an exception as a JSON API error response.
      *
-     * @param Request $request
-     * @param Exception $e
+     * @param  Request  $request
+     * @param  Throwable  $e
      * @return Response
      */
-    public function renderJsonApi($request, Exception $e)
+    public function renderJsonApi($request, Throwable $e)
     {
         return json_api()->response()->exception($e);
     }
@@ -74,7 +72,7 @@ trait HandlesErrors
     /**
      * Prepare JSON API exception for non-JSON API rendering.
      *
-     * @param JsonApiException $ex
+     * @param  JsonApiException  $ex
      * @return HttpException
      */
     protected function prepareJsonApiException(JsonApiException $ex)
@@ -85,5 +83,4 @@ trait HandlesErrors
 
         return new HttpException($ex->getHttpCode(), $error, $ex);
     }
-
 }

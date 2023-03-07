@@ -23,10 +23,9 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginTest extends TestCase
 {
-
     public function test()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'password' => bcrypt('secret'),
         ]);
 
@@ -49,7 +48,7 @@ class LoginTest extends TestCase
 
     public function testInvalid()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'password' => bcrypt('secret'),
         ]);
 

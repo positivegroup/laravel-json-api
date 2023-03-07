@@ -23,7 +23,6 @@ use Illuminate\Support\Arr;
 
 class EncodingTest extends TestCase
 {
-
     /**
      * @var bool
      */
@@ -43,7 +42,7 @@ class EncodingTest extends TestCase
      */
     public function testRequestedResourceHasRequestHost()
     {
-        $id = factory(Post::class)->create()->getRouteKey();
+        $id = Post::factory()->create()->getRouteKey();
         config()->set('json-api-v1.url.host', null);
 
         $json = $this
@@ -60,7 +59,7 @@ class EncodingTest extends TestCase
      */
     public function testRequestedResourceDoesNotHaveHost()
     {
-        $id = factory(Post::class)->create()->getRouteKey();
+        $id = Post::factory()->create()->getRouteKey();
         config()->set('json-api-v1.url.host', false);
 
         $json = $this
@@ -77,7 +76,7 @@ class EncodingTest extends TestCase
      */
     public function testRequestResourceDoesNotHaveUrlNamespace()
     {
-        $id = factory(Post::class)->create()->getRouteKey();
+        $id = Post::factory()->create()->getRouteKey();
         config()->set('json-api-v1.url.namespace', null);
 
         $json = $this
@@ -94,7 +93,7 @@ class EncodingTest extends TestCase
      */
     public function testRequestResourceHasEmptyUrlNamespace()
     {
-        $id = factory(Post::class)->create()->getRouteKey();
+        $id = Post::factory()->create()->getRouteKey();
         config()->set('json-api-v1.url.namespace', '');
 
         $json = $this
@@ -111,7 +110,7 @@ class EncodingTest extends TestCase
      */
     public function testRequestResourceDoesNotHaveHostAndUrlNamespace()
     {
-        $id = factory(Post::class)->create()->getRouteKey();
+        $id = Post::factory()->create()->getRouteKey();
         config()->set('json-api-v1.url.host', false);
         config()->set('json-api-v1.url.namespace', null);
 
@@ -130,7 +129,7 @@ class EncodingTest extends TestCase
      */
     public function testSerializedResourceHasAppHost()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         config()->set('app.url', $host = 'http://www.example.com');
         config()->set('json-api-v1.url.host', null);
@@ -145,7 +144,7 @@ class EncodingTest extends TestCase
      */
     public function testSerializedResourceHasSpecificHost()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         config()->set('app.url', 'http://localhost');
         config()->set('json-api-v1.url.host', $host = 'http://www.example.com');
@@ -160,7 +159,7 @@ class EncodingTest extends TestCase
      */
     public function testSerializedResourceDoesNotHaveAppHost()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         config()->set('app.url', 'http://www.example.com');
         config()->set('json-api-v1.url.host', false);
@@ -171,7 +170,7 @@ class EncodingTest extends TestCase
 
     /**
      * @param $link
-     * @param array $json
+     * @param  array  $json
      */
     private function assertSelfLink($link, array $json)
     {

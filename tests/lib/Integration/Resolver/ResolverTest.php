@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\Route;
 
 class ResolverTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -67,7 +66,7 @@ class ResolverTest extends TestCase
             'foobars' => Post::class,
         ]));
 
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doRead($post)->assertRead([
             'type' => 'foobars',
@@ -88,7 +87,7 @@ class ResolverTest extends TestCase
             'foobars' => Post::class,
         ]);
 
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doRead($post)->assertRead([
             'type' => 'foobars',

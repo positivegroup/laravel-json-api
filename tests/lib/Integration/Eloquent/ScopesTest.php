@@ -25,7 +25,6 @@ use DummyApp\User;
 
 class ScopesTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -43,7 +42,7 @@ class ScopesTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
+        $this->user = User::factory()->create();
 
         $this->app->afterResolving(Adapter::class, function (Adapter $adapter) {
             $adapter->addClosureScope(function ($query) {
@@ -54,15 +53,15 @@ class ScopesTest extends TestCase
 
     public function testListAll(): void
     {
-        $expected = factory(Post::class, 2)->create(['author_id' => $this->user->getKey()]);
-        factory(Post::class, 3)->create();
+        $expected = Post::factory()->times(2)->create(['author_id' => $this->user->getKey()]);
+        Post::factory()->times(3)->create();
 
         $this->getJsonApi('/api/v1/posts')->assertFetchedMany($expected);
     }
 
     public function testRead(): void
     {
-        $post = factory(Post::class)->create(['author_id' => $this->user->getKey()]);
+        $post = Post::factory()->create(['author_id' => $this->user->getKey()]);
 
         $this->getJsonApi(url('/api/v1/posts', $post))->assertFetchedOne([
             'type' => 'posts',
@@ -72,7 +71,7 @@ class ScopesTest extends TestCase
 
     public function testRead404(): void
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->getJsonApi(url('/api/v1/posts', $post))->assertStatus(404);
     }
@@ -89,15 +88,15 @@ class ScopesTest extends TestCase
 
     public function testReadToMany(): void
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->user->country()->associate($country);
         $this->user->save();
 
-        $expected = factory(Post::class, 2)->create(['author_id' => $this->user->getKey()]);
+        $expected = Post::factory()->times(2)->create(['author_id' => $this->user->getKey()]);
 
-        factory(Post::class)->create([
-            'author_id' => factory(User::class)->create([
+        Post::factory()->create([
+            'author_id' => User::factory()->create([
                 'country_id' => $country->getKey(),
             ]),
         ]);
@@ -109,15 +108,15 @@ class ScopesTest extends TestCase
 
     public function testReadToManyRelationship(): void
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->user->country()->associate($country);
         $this->user->save();
 
-        $expected = factory(Post::class, 2)->create(['author_id' => $this->user->getKey()]);
+        $expected = Post::factory()->times(2)->create(['author_id' => $this->user->getKey()]);
 
-        factory(Post::class)->create([
-            'author_id' => factory(User::class)->create([
+        Post::factory()->create([
+            'author_id' => User::factory()->create([
                 'country_id' => $country->getKey(),
             ]),
         ]);

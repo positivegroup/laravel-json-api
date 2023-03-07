@@ -22,7 +22,6 @@ use DummyApp\Tag;
 
 class ToManyTest extends TestCase
 {
-
     /**
      * @var Post
      */
@@ -34,12 +33,12 @@ class ToManyTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->post = factory(Post::class)->create();
+        $this->post = Post::factory()->create();
     }
 
     public function testAddTo()
     {
-        $tags = factory(Tag::class, 2)->create();
+        $tags = Tag::factory()->times(2)->create();
 
         $expected = $this->willSeeIdentifiers($tags);
         $actual = $this->client->addToRecordRelationship($this->post, $tags, 'tags');
@@ -56,7 +55,7 @@ class ToManyTest extends TestCase
 
     public function testRemoveFrom()
     {
-        $tags = factory(Tag::class, 2)->create();
+        $tags = Tag::factory()->times(2)->create();
 
         $expected = $this->willSeeIdentifiers($tags);
         $actual = $this->client->removeFromRecordRelationship($this->post, $tags, 'tags');

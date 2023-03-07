@@ -17,10 +17,13 @@
 
 namespace DummyPackage;
 
+use DummyPackage\Factories\BlogFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Blog extends Model
 {
+    use HasFactory;
 
     /**
      * @var array
@@ -37,4 +40,9 @@ class Blog extends Model
     protected $dates = [
         'published_at',
     ];
+
+    protected static function newFactory()
+    {
+        return BlogFactory::new();
+    }
 }

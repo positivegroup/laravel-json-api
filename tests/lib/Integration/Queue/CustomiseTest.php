@@ -24,7 +24,6 @@ use DummyApp\JsonApi\QueueJobs;
 
 class CustomiseTest extends TestCase
 {
-
     /**
      * Set to false as we need to override config before
      *
@@ -58,9 +57,9 @@ class CustomiseTest extends TestCase
 
     public function testListAll()
     {
-        $jobs = factory(ClientJob::class, 2)->create();
+        $jobs = ClientJob::factory()->times(2)->create();
         // this one should not appear in results as it is for a different resource type.
-        factory(ClientJob::class)->create(['resource_type' => 'foo']);
+        ClientJob::factory()->create(['resource_type' => 'foo']);
 
         $this->getJsonApi('/api/v1/downloads/client-jobs')
             ->assertFetchedMany($jobs);

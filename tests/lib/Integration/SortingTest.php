@@ -21,7 +21,6 @@ use DummyApp\Tag;
 
 class SortingTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -29,8 +28,8 @@ class SortingTest extends TestCase
 
     public function testDefaultSort()
     {
-        $b = factory(Tag::class)->create(['name' => 'Tag B']);
-        $a = factory(Tag::class)->create(['name' => 'Tag A']);
+        $b = Tag::factory()->create(['name' => 'Tag B']);
+        $a = Tag::factory()->create(['name' => 'Tag A']);
 
         $this->resourceType = 'tags';
         $this->actingAsUser()->doSearch()->assertSearchedIds([$a, $b]);

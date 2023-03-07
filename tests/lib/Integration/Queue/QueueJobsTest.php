@@ -22,7 +22,6 @@ use CloudCreativity\LaravelJsonApi\Tests\Integration\TestCase;
 
 class QueueJobsTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -30,9 +29,9 @@ class QueueJobsTest extends TestCase
 
     public function testListAll()
     {
-        $jobs = factory(ClientJob::class, 2)->create();
+        $jobs = ClientJob::factory()->times(2)->create();
         // this one should not appear in results as it is for a different resource type.
-        factory(ClientJob::class)->create(['resource_type' => 'foo']);
+        ClientJob::factory()->create(['resource_type' => 'foo']);
 
         $this->getJsonApi('/api/v1/downloads/queue-jobs')
             ->assertFetchedMany($jobs);
@@ -40,7 +39,7 @@ class QueueJobsTest extends TestCase
 
     public function testReadPending()
     {
-        $job = factory(ClientJob::class)->create();
+        $job = ClientJob::factory()->create();
         $expected = $this->serialize($job);
 
         $this->getJsonApi($expected['links']['self'])
@@ -54,15 +53,15 @@ class QueueJobsTest extends TestCase
      */
     public function testReadNotPending()
     {
-       $job = factory(ClientJob::class)->states('success', 'with_download')->create();
+        $job = ClientJob::factory()->success()->withDownload()->create();
 
-       $response = $this
-           ->getJsonApi($this->jobUrl($job))
-           ->assertStatus(303)
-           ->assertHeader('Location', url('/api/v1/downloads', [$job->resource_id]))
-           ->assertHeader('Content-Type', 'application/vnd.api+json');
+        $response = $this
+            ->getJsonApi($this->jobUrl($job))
+            ->assertStatus(303)
+            ->assertHeader('Location', url('/api/v1/downloads', [$job->resource_id]))
+            ->assertHeader('Content-Type', 'application/vnd.api+json');
 
-       $this->assertEmpty($response->getContent(), 'content is empty.');
+        $this->assertEmpty($response->getContent(), 'content is empty.');
     }
 
     /**
@@ -71,7 +70,7 @@ class QueueJobsTest extends TestCase
      */
     public function testReadNotPendingCannotSeeOther()
     {
-        $job = factory(ClientJob::class)->states('success')->create();
+        $job = ClientJob::factory()->success()->create();
         $expected = $this->serialize($job);
 
         $this->getJsonApi($this->jobUrl($job))
@@ -86,7 +85,7 @@ class QueueJobsTest extends TestCase
      */
     public function testReadFailed()
     {
-        $job = factory(ClientJob::class)->states('failed', 'with_download')->create();
+        $job = ClientJob::factory()->failed()->withDownload()->create();
         $expected = $this->serialize($job);
 
         $this->getJsonApi($this->jobUrl($job))
@@ -96,7 +95,7 @@ class QueueJobsTest extends TestCase
 
     public function testReadNotFound()
     {
-        $job = factory(ClientJob::class)->create(['resource_type' => 'foo']);
+        $job = ClientJob::factory()->create(['resource_type' => 'foo']);
 
         $this->getJsonApi($this->jobUrl($job, 'downloads'))
             ->assertStatus(404);
@@ -104,15 +103,15 @@ class QueueJobsTest extends TestCase
 
     public function testInvalidInclude()
     {
-        $job = factory(ClientJob::class)->create();
+        $job = ClientJob::factory()->create();
 
-        $this->getJsonApi($this->jobUrl($job) . '?' . http_build_query(['include' => 'foo']))
+        $this->getJsonApi($this->jobUrl($job).'?'.http_build_query(['include' => 'foo']))
             ->assertStatus(400);
     }
 
     /**
-     * @param ClientJob $job
-     * @param string|null $resourceType
+     * @param  ClientJob  $job
+     * @param  string|null  $resourceType
      * @return string
      */
     private function jobUrl(ClientJob $job, string $resourceType = null): string
@@ -120,14 +119,14 @@ class QueueJobsTest extends TestCase
         return url('/api/v1', [
             $resourceType ?: $job->resource_type,
             'queue-jobs',
-            $job
+            $job,
         ]);
     }
 
     /**
      * Get the expected resource object for a client job model.
      *
-     * @param ClientJob $job
+     * @param  ClientJob  $job
      * @return array
      */
     private function serialize(ClientJob $job): array

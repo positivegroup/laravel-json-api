@@ -23,7 +23,6 @@ use DummyApp\Post;
 
 class AuthorizerTest extends TestCase
 {
-
     /**
      * @var bool
      */
@@ -91,7 +90,8 @@ class AuthorizerTest extends TestCase
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
+     *
      * @depends testCreateUnauthenticated
      */
     public function testCreateUnauthorized(array $data)
@@ -107,11 +107,18 @@ class AuthorizerTest extends TestCase
     }
 
     /**
-     * @param array $data
-     * @depends testCreateUnauthenticated
+     * @param  array  $data
      */
-    public function testCreateAllowed(array $data)
+    public function testCreateAllowed()
     {
+        $data = [
+            'type' => 'posts',
+            'attributes' => [
+                'title' => 'Hello World',
+                'content' => '...',
+                'slug' => 'hello-world',
+            ],
+        ];
         $this->actingAsUser('author')
             ->doCreate($data)
             ->assertStatus(201);
@@ -119,7 +126,7 @@ class AuthorizerTest extends TestCase
 
     public function testReadUnauthenticated()
     {
-        $post = factory(Post::class)->states('published')->create();
+        $post = Post::factory()->published()->create();
 
         $this->doRead($post)->assertStatus(401)->assertJson([
             'errors' => [
@@ -133,7 +140,7 @@ class AuthorizerTest extends TestCase
 
     public function testReadUnauthorized()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->actingAsUser()->doRead($post)->assertStatus(403)->assertJson([
             'errors' => [
@@ -147,21 +154,21 @@ class AuthorizerTest extends TestCase
 
     public function testReadAllowed()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
-        $this->actingAs($post->author, 'api')
+        $this->actingAs($post->author)
             ->doRead($post)
             ->assertStatus(200);
     }
 
     public function testUpdateUnauthenticated()
     {
-        $post = factory(Post::class)->states('published')->create();
+        $post = Post::factory()->published()->create();
         $data = [
             'type' => 'posts',
             'id' => (string) $post->getKey(),
             'attributes' => [
-                'title' => 'Hello World'
+                'title' => 'Hello World',
             ],
         ];
 
@@ -177,12 +184,12 @@ class AuthorizerTest extends TestCase
 
     public function testUpdateUnauthorized()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $data = [
             'type' => 'posts',
             'id' => (string) $post->getKey(),
             'attributes' => [
-                'title' => 'Hello World'
+                'title' => 'Hello World',
             ],
         ];
 
@@ -198,24 +205,23 @@ class AuthorizerTest extends TestCase
 
     public function testUpdateAllowed()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $data = [
             'type' => 'posts',
             'id' => (string) $post->getKey(),
             'attributes' => [
-                'title' => 'Hello World'
+                'title' => 'Hello World',
             ],
         ];
 
-        $this->actingAs($post->author, 'api')
+        $this->actingAs($post->author)
             ->doUpdate($data)
             ->assertStatus(200);
     }
 
-
     public function testDeleteUnauthenticated()
     {
-        $post = factory(Post::class)->states('published')->create();
+        $post = Post::factory()->published()->create();
 
         $this->doDelete($post)->assertStatus(401)->assertJson([
             'errors' => [
@@ -231,7 +237,7 @@ class AuthorizerTest extends TestCase
 
     public function testDeleteUnauthorized()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->actingAsUser()->doDelete($post)->assertStatus(403)->assertJson([
             'errors' => [
@@ -247,13 +253,12 @@ class AuthorizerTest extends TestCase
 
     public function testDeleteAllowed()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
-        $this->actingAs($post->author, 'api')
+        $this->actingAs($post->author)
             ->doDelete($post)
             ->assertStatus(204);
 
         $this->assertDatabaseMissing('posts', ['id' => $post->getKey()]);
     }
-
 }

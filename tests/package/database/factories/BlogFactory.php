@@ -1,4 +1,7 @@
 <?php
+
+namespace DummyPackage\Factories;
+
 /**
  * Copyright 2020 Cloud Creativity Limited
  *
@@ -16,21 +19,24 @@
  */
 
 use DummyPackage\Blog;
-use Faker\Generator as Faker;
-use Illuminate\Database\Eloquent\Factory as EloquentFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-/** @var EloquentFactory $factory */
+class BlogFactory extends Factory
+{
+    protected $model = Blog::class;
 
-/** Blog */
-$factory->define(Blog::class, function (Faker $faker) {
-    return [
-        'title' => $faker->sentence,
-        'article' => $faker->text,
-    ];
-});
+    public function definition()
+    {
+        return [
+            'title' => $this->faker->sentence,
+            'article' => $this->faker->text,
+        ];
+    }
 
-$factory->state(Blog::class, 'published', function (Faker $faker) {
-    return [
-        'published_at' => $faker->dateTimeBetween('-1 month', 'now'),
-    ];
-});
+    public function published()
+    {
+        return $this->state(fn () => [
+            'published_at' => $this->faker->dateTimeBetween('-1 month', 'now'),
+        ]);
+    }
+}

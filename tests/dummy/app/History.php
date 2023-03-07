@@ -17,11 +17,14 @@
 
 namespace DummyApp;
 
+use DummyApp\Factories\HistoryFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class History extends Model
 {
+    use HasFactory;
 
     /**
      * @var array
@@ -34,5 +37,10 @@ class History extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function newFactory()
+    {
+        return HistoryFactory::new();
     }
 }

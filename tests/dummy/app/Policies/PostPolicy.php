@@ -23,11 +23,10 @@ use Illuminate\Support\Facades\Gate;
 
 class PostPolicy
 {
-
     /**
      * Determine if the user is allowed to access posts.
      *
-     * @param User $user
+     * @param  User  $user
      * @return bool
      */
     public function access(User $user)
@@ -38,7 +37,7 @@ class PostPolicy
     /**
      * Determine if the given user can create posts.
      *
-     * @param User $user
+     * @param  User  $user
      * @return bool
      */
     public function create(User $user)
@@ -49,8 +48,8 @@ class PostPolicy
     /**
      * Determine if the given post can be read by the user.
      *
-     * @param User $user
-     * @param Post $post
+     * @param  User  $user
+     * @param  Post  $post
      * @return bool
      */
     public function read(User $user, Post $post)
@@ -77,8 +76,8 @@ class PostPolicy
     /**
      * Determine if the given post can be deleted by the user.
      *
-     * @param User $user
-     * @param Post $post
+     * @param  User  $user
+     * @param  Post  $post
      * @return bool
      */
     public function delete(User $user, Post $post)
@@ -89,8 +88,8 @@ class PostPolicy
     /**
      * Determine if the user can comment on the given post.
      *
-     * @param User $user
-     * @param Post $post
+     * @param  User  $user
+     * @param  Post  $post
      * @return bool
      */
     public function comment(User $user, Post $post)

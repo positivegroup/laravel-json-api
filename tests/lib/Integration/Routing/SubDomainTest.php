@@ -28,12 +28,9 @@ use DummyApp\User;
  * Tests routing when there is a route parameter before the JSON API route
  * parameters, in this case a wildcard domain. We need to test that this
  * does not affect the JSON API controller from obtaining route parameters.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class SubDomainTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -53,14 +50,14 @@ class SubDomainTest extends TestCase
 
         $this->withFluentRoutes()->domain('{wildcard}.example.com')->routes(function (RouteRegistrar $api) {
             $api->resource('posts')->relationships(function ($relations) {
-               $relations->hasOne('author');
+                $relations->hasOne('author');
             });
         });
     }
 
     public function testRead()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = "http://foo.example.com/api/v1/posts/{$post->getRouteKey()}";
 
         $this->getJsonApi($uri)->assertFetchedOne([
@@ -74,7 +71,7 @@ class SubDomainTest extends TestCase
 
     public function testUpdate()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = "http://foo.example.com/api/v1/posts/{$post->getRouteKey()}";
 
         $data = [
@@ -90,7 +87,7 @@ class SubDomainTest extends TestCase
 
     public function testDelete()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = "http://foo.example.com/api/v1/posts/{$post->getRouteKey()}";
 
         $this->deleteJsonApi($uri)->assertStatus(204);
@@ -98,7 +95,7 @@ class SubDomainTest extends TestCase
 
     public function testReadRelated()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = "http://foo.example.com/api/v1/posts/{$post->getRouteKey()}/author";
 
         $this->getJsonApi($uri)->assertStatus(200);
@@ -106,7 +103,7 @@ class SubDomainTest extends TestCase
 
     public function testReadRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = "http://foo.example.com/api/v1/posts/{$post->getRouteKey()}/relationships/author";
 
         $this->getJsonApi($uri)->assertStatus(200);
@@ -114,8 +111,8 @@ class SubDomainTest extends TestCase
 
     public function testReplaceRelationship()
     {
-        $post = factory(Post::class)->create();
-        $user = factory(User::class)->create();
+        $post = Post::factory()->create();
+        $user = User::factory()->create();
         $uri = "http://foo.example.com/api/v1/posts/{$post->getRouteKey()}/relationships/author";
 
         $data = [
@@ -125,5 +122,4 @@ class SubDomainTest extends TestCase
 
         $this->patchJsonApi($uri, [], compact('data'))->assertStatus(204);
     }
-
 }

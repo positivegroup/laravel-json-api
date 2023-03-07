@@ -24,13 +24,12 @@ use CloudCreativity\LaravelJsonApi\Contracts\Resolver\ResolverInterface;
 use CloudCreativity\LaravelJsonApi\Contracts\Validators\ValidatorProviderInterface;
 use CloudCreativity\LaravelJsonApi\Exceptions\RuntimeException;
 use Illuminate\Container\Container as IlluminateContainer;
-use League\Flysystem\AdapterInterface;
+use League\Flysystem\FilesystemAdapter;
 use Neomerx\JsonApi\Contracts\Schema\SchemaProviderInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class ContainerTest extends TestCase
 {
-
     /**
      * @var MockObject|ResolverInterface
      */
@@ -253,7 +252,7 @@ class ContainerTest extends TestCase
 
     public function testResourceAuthorizerIsNotResourceAuthorizer()
     {
-        $mock = $this->createMock(AdapterInterface::class);
+        $mock = $this->createMock(FilesystemAdapter::class);
         $this->resolver->method('getAuthorizerByResourceType')->willReturn(get_class($mock));
         $this->illuminateContainer->method('make')->willReturn($mock);
 

@@ -22,7 +22,6 @@ use DummyPackage\Blog;
 
 class PackageTest extends TestCase
 {
-
     /**
      * Test that we can read a resource from the package.
      */
@@ -31,7 +30,7 @@ class PackageTest extends TestCase
         $this->resourceType = 'blogs';
 
         /** @var Blog $blog */
-        $blog = factory(Blog::class)->states('published')->create();
+        $blog = Blog::factory()->published()->create();
 
         $expected = [
             'type' => 'blogs',
@@ -54,7 +53,7 @@ class PackageTest extends TestCase
         $this->resourceType = 'posts';
 
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doRead($post)->assertFetchedOne($post);
     }

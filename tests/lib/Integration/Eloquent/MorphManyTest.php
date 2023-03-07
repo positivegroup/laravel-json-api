@@ -30,12 +30,9 @@ use DummyApp\User;
  * morph-many relationship.
  *
  * In our dummy app, this is the comments relationship on a post model.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class MorphManyTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -43,7 +40,7 @@ class MorphManyTest extends TestCase
 
     public function testCreateWithEmpty()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -69,9 +66,9 @@ class MorphManyTest extends TestCase
     public function testCreateWithRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->create();
+        $comment = Comment::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -102,8 +99,8 @@ class MorphManyTest extends TestCase
     public function testCreateWithManyRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->make();
-        $comments = factory(Comment::class, 2)->create();
+        $post = Post::factory()->make();
+        $comments = Comment::factory()->times(2)->create();
 
         $data = [
             'type' => 'posts',
@@ -138,8 +135,8 @@ class MorphManyTest extends TestCase
     public function testUpdateReplacesRelationshipWithEmptyRelationship()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
-        factory(Comment::class, 2)->create([
+        $post = Post::factory()->create();
+        Comment::factory()->times(2)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
@@ -165,8 +162,8 @@ class MorphManyTest extends TestCase
     public function testUpdateReplacesEmptyRelationshipWithResource()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
-        $comment = factory(Comment::class)->create();
+        $post = Post::factory()->create();
+        $comment = Comment::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -195,13 +192,13 @@ class MorphManyTest extends TestCase
     public function testUpdateChangesRelatedResources()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
-        factory(Comment::class, 3)->create([
+        $post = Post::factory()->create();
+        Comment::factory()->times(3)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
 
-        $comments = factory(Comment::class, 2)->create();
+        $comments = Comment::factory()->times(2)->create();
 
         $data = [
             'type' => 'posts',
@@ -236,14 +233,14 @@ class MorphManyTest extends TestCase
      */
     public function testReadRelated()
     {
-        $model = factory(Post::class)->create();
-        $comments = factory(Comment::class, 2)->create([
+        $model = Post::factory()->create();
+        $comments = Comment::factory()->times(2)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $model->getKey(),
         ]);
 
         /** This comment should not appear in the results... */
-        factory(Comment::class)->states('post')->create();
+        Comment::factory()->post()->create();
 
         $this->doReadRelated($model, 'comments')
             ->assertReadHasMany('comments', $comments);
@@ -251,17 +248,17 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithFilter()
     {
-        $post = factory(Post::class)->create();
-        $user = factory(User::class)->create();
+        $post = Post::factory()->create();
+        $user = User::factory()->create();
 
-        $expected = factory(Comment::class, 2)->create([
+        $expected = Comment::factory()->times(2)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
             'user_id' => $user->getKey(),
         ]);
 
         /** This one should not be found. */
-        factory(Comment::class)->create([
+        Comment::factory()->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
@@ -272,7 +269,7 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithInvalidFilter()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelated($post, 'comments', ['filter' => ['created-by' => 'foo']])->assertError(400, [
             'source' => ['parameter' => 'filter.created-by'],
@@ -281,14 +278,14 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithSort()
     {
-        $a = factory(Comment::class)->states('post')->create([
+        $a = Comment::factory()->post()->create([
             'content' => 'Some comment',
         ]);
 
         /** @var Post $post */
         $post = $a->commentable;
 
-        $b = factory(Comment::class)->create([
+        $b = Comment::factory()->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
             'content' => 'A comment',
@@ -300,7 +297,7 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithInvalidSort()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** `slug` is a valid sort parameter on the posts resource, but not the comments resource. */
         $this->doReadRelated($post, 'comments', ['sort' => 'slug'])->assertError(400, [
@@ -310,12 +307,11 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithInclude()
     {
-        $post = factory(Post::class)->create();
-        $comments = factory(Comment::class, 3)->create([
+        $post = Post::factory()->create();
+        $comments = Comment::factory()->times(3)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
-
 
         $expected = $comments->map(function (Comment $comment) {
             return ['type' => 'users', 'id' => (string) $comment->user_id];
@@ -328,7 +324,7 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithInvalidInclude()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** `author` is valid on a post but not on a comment. */
         $this->doReadRelated($post, 'comments', ['include' => 'author'])->assertError(400, [
@@ -338,8 +334,8 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithPagination()
     {
-        $post = factory(Post::class)->create();
-        $comments = factory(Comment::class, 3)->create([
+        $post = Post::factory()->create();
+        $comments = Comment::factory()->times(3)->create([
             'created_at' => Carbon::now(),
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
@@ -357,7 +353,7 @@ class MorphManyTest extends TestCase
 
     public function testReadRelatedWithInvalidPagination()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelated($post, 'comments', ['page' => ['limit' => 100]])->assertError(400, [
             'source' => ['parameter' => 'page.limit'],
@@ -369,14 +365,14 @@ class MorphManyTest extends TestCase
      */
     public function testReadRelationship()
     {
-        $model = factory(Post::class)->create();
-        $comments = factory(Comment::class, 2)->create([
+        $model = Post::factory()->create();
+        $comments = Comment::factory()->times(2)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $model->getKey(),
         ]);
 
         /** This comment should not appear in the results... */
-        factory(Comment::class)->states('post')->create();
+        Comment::factory()->post()->create();
 
         $this->doReadRelated($model, 'comments')
             ->assertReadHasManyIdentifiers('comments', $comments);
@@ -384,7 +380,7 @@ class MorphManyTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelationship($post, 'comments')
             ->assertReadHasManyIdentifiers(null);
@@ -392,8 +388,8 @@ class MorphManyTest extends TestCase
 
     public function testReplaceEmptyRelationshipWithRelatedResource()
     {
-        $post = factory(Post::class)->create();
-        $comments = factory(Comment::class, 2)->create();
+        $post = Post::factory()->create();
+        $comments = Comment::factory()->times(2)->create();
 
         $data = $comments->map(function (Comment $comment) {
             return ['type' => 'comments', 'id' => (string) $comment->getRouteKey()];
@@ -407,8 +403,8 @@ class MorphManyTest extends TestCase
 
     public function testReplaceRelationshipWithNone()
     {
-        $post = factory(Post::class)->create();
-        factory(Comment::class, 2)->create([
+        $post = Post::factory()->create();
+        Comment::factory()->times(2)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
@@ -421,13 +417,13 @@ class MorphManyTest extends TestCase
 
     public function testReplaceRelationshipWithDifferentResources()
     {
-        $post = factory(Post::class)->create();
-        factory(Comment::class, 2)->create([
+        $post = Post::factory()->create();
+        Comment::factory()->times(2)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
 
-        $comments = factory(Comment::class, 3)->create();
+        $comments = Comment::factory()->times(3)->create();
 
         $data = $comments->map(function (Comment $comment) {
             return ['type' => 'comments', 'id' => (string) $comment->getRouteKey()];
@@ -441,13 +437,13 @@ class MorphManyTest extends TestCase
 
     public function testAddToRelationship()
     {
-        $post = factory(Post::class)->create();
-        $existing = factory(Comment::class, 2)->create([
+        $post = Post::factory()->create();
+        $existing = Comment::factory()->times(2)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
 
-        $add = factory(Comment::class, 2)->create();
+        $add = Comment::factory()->times(2)->create();
         $data = $add->map(function (Comment $comment) {
             return ['type' => 'comments', 'id' => (string) $comment->getRouteKey()];
         })->all();
@@ -460,8 +456,8 @@ class MorphManyTest extends TestCase
 
     public function testRemoveFromRelationship()
     {
-        $post = factory(Post::class)->create();
-        $comments = factory(Comment::class, 4)->create([
+        $post = Post::factory()->create();
+        $comments = Comment::factory()->times(4)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
@@ -487,8 +483,8 @@ class MorphManyTest extends TestCase
     }
 
     /**
-     * @param Post $post
-     * @param iterable $comments
+     * @param  Post  $post
+     * @param  iterable  $comments
      * @return void
      */
     private function assertCommentsAre(Post $post, $comments)

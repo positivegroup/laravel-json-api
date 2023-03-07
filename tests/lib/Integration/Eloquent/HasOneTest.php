@@ -28,12 +28,9 @@ use DummyApp\User;
  * Tests a JSON API has-one relationship, which is used for an
  * Eloquent has-one relationship. In our dummy application,
  * this is the `phone` relationship on the `users` resource.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class HasOneTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -45,7 +42,7 @@ class HasOneTest extends TestCase
     public function testCreateWithNull()
     {
         /** @var User $user */
-        $user = factory(User::class)->make();
+        $user = User::factory()->make();
 
         $data = [
             'type' => 'users',
@@ -85,15 +82,17 @@ class HasOneTest extends TestCase
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      * @param $value
+     *
      * @dataProvider confirmationProvider
+     *
      * @see https://github.com/cloudcreativity/laravel-json-api/issues/262
      */
     public function testCreatePasswordNotConfirmed(string $field, $value): void
     {
         /** @var User $user */
-        $user = factory(User::class)->make();
+        $user = User::factory()->make();
 
         $data = ResourceObject::create([
             'type' => 'users',
@@ -128,9 +127,9 @@ class HasOneTest extends TestCase
     public function testCreateWithRelated()
     {
         /** @var Phone $phone */
-        $phone = factory(Phone::class)->create();
+        $phone = Phone::factory()->create();
         /** @var User $user */
-        $user = factory(User::class)->make();
+        $user = User::factory()->make();
 
         $data = [
             'type' => 'users',
@@ -167,7 +166,7 @@ class HasOneTest extends TestCase
     public function testUpdateReplacesRelationshipWithNull()
     {
         /** @var Phone $phone */
-        $phone = factory(Phone::class)->states('user')->create();
+        $phone = Phone::factory()->user()->create();
 
         $data = [
             'type' => 'users',
@@ -193,9 +192,9 @@ class HasOneTest extends TestCase
     public function testUpdateReplacesNullRelationshipWithResource()
     {
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         /** @var Phone $phone */
-        $phone = factory(Phone::class)->create();
+        $phone = Phone::factory()->create();
 
         $data = [
             'type' => 'users',
@@ -224,9 +223,9 @@ class HasOneTest extends TestCase
     public function testUpdateChangesRelatedResource()
     {
         /** @var Phone $existing */
-        $existing = factory(Phone::class)->states('user')->create();
+        $existing = Phone::factory()->user()->create();
         /** @var Phone $other */
-        $other = factory(Phone::class)->create();
+        $other = Phone::factory()->create();
 
         $data = [
             'type' => 'users',
@@ -260,7 +259,7 @@ class HasOneTest extends TestCase
     public function testReadRelated()
     {
         /** @var Phone $phone */
-        $phone = factory(Phone::class)->states('user')->create();
+        $phone = Phone::factory()->user()->create();
         /** @var User $user */
         $user = $phone->user;
 
@@ -289,7 +288,7 @@ class HasOneTest extends TestCase
     public function testReadRelationship()
     {
         /** @var Phone $phone */
-        $phone = factory(Phone::class)->states('user')->create();
+        $phone = Phone::factory()->user()->create();
 
         $this->doReadRelationship($phone->user, 'phone')
             ->assertReadHasOneIdentifier('phones', $phone->getKey());
@@ -301,9 +300,9 @@ class HasOneTest extends TestCase
     public function testReplaceNullRelationshipWithRelatedResource()
     {
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         /** @var Phone $phone */
-        $phone = factory(Phone::class)->create();
+        $phone = Phone::factory()->create();
 
         $data = ['type' => 'phones', 'id' => (string) $phone->getKey()];
 
@@ -322,10 +321,10 @@ class HasOneTest extends TestCase
     public function testReplaceRelationshipWithNull()
     {
         /** @var Phone $phone */
-        $phone = factory(Phone::class)->states('user')->create();
+        $phone = Phone::factory()->user()->create();
 
         /** @var Phone $other */
-        $other = factory(Phone::class)->states('user')->create();
+        $other = Phone::factory()->user()->create();
 
         $this->doReplaceRelationship($phone->user, 'phone', null)
             ->assertStatus(204);
@@ -348,9 +347,9 @@ class HasOneTest extends TestCase
     public function testReplaceRelationshipWithDifferentResource()
     {
         /** @var Phone $existing */
-        $existing = factory(Phone::class)->states('user')->create();
+        $existing = Phone::factory()->user()->create();
         /** @var Phone $other */
-        $other = factory(Phone::class)->create();
+        $other = Phone::factory()->create();
 
         $data = ['type' => 'phones', 'id' => (string) $other->getKey()];
 

@@ -24,13 +24,12 @@ use DummyApp\Policies\PostPolicy;
 use DummyApp\Policies\UserPolicy;
 use DummyApp\Post;
 use DummyApp\User;
-use Illuminate\Database\Eloquent\Factory as ModelFactory;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Ui\UiServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-
     /**
      * @return void
      */
@@ -43,12 +42,11 @@ class AppServiceProvider extends ServiceProvider
                 'database' => ':memory:',
                 'prefix' => '',
             ],
-            'json-api-v1' => require __DIR__ . '/../../config/json-api-v1.php',
+            'json-api-v1' => require __DIR__.'/../../config/json-api-v1.php',
             'auth.providers.users.model' => User::class,
         ]);
 
-        $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
-        $this->app->make(ModelFactory::class)->load(__DIR__ . '/../../database/factories');
+        $this->loadMigrationsFrom(__DIR__.'/../../database/migrations');
 
         Gate::policy(Post::class, PostPolicy::class);
         Gate::policy(User::class, UserPolicy::class);
@@ -63,6 +61,6 @@ class AppServiceProvider extends ServiceProvider
     {
         LaravelJsonApi::runMigrations();
         $this->app->singleton(SiteRepository::class);
+        $this->app->register(UiServiceProvider::class);
     }
-
 }

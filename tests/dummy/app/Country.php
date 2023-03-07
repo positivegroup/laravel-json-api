@@ -17,12 +17,15 @@
 
 namespace DummyApp;
 
+use DummyApp\Factories\CountryFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Country extends Model
 {
+    use HasFactory;
 
     /**
      * @var array
@@ -59,5 +62,10 @@ class Country extends Model
             'country_id',
             'author_id'
         );
+    }
+
+    protected static function newFactory()
+    {
+        return CountryFactory::new();
     }
 }

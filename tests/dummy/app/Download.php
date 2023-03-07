@@ -17,13 +17,21 @@
 
 namespace DummyApp;
 
+use DummyApp\Factories\DownloadFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Download extends Model
 {
+    use HasFactory;
 
     /**
      * @var array
      */
     protected $fillable = ['category'];
+
+    protected static function newFactory()
+    {
+        return DownloadFactory::new();
+    }
 }

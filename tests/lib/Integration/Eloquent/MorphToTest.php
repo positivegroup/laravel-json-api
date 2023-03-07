@@ -29,12 +29,9 @@ use DummyApp\Video;
  * relationship.
  *
  * In our dummy app, this is the commentable relationship on the comment model.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class MorphToTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -52,7 +49,7 @@ class MorphToTest extends TestCase
     public function testCreateWithNull()
     {
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->make();
+        $comment = Comment::factory()->make();
 
         $data = [
             'type' => 'comments',
@@ -87,7 +84,7 @@ class MorphToTest extends TestCase
     public function testCreateWithRelated()
     {
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->states('video')->make();
+        $comment = Comment::factory()->video()->make();
 
         $data = [
             'type' => 'comments',
@@ -118,7 +115,7 @@ class MorphToTest extends TestCase
     public function testUpdateReplacesRelationshipWithNull()
     {
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->states('video')->create();
+        $comment = Comment::factory()->video()->create();
 
         $data = [
             'type' => 'comments',
@@ -142,10 +139,10 @@ class MorphToTest extends TestCase
     public function testUpdateReplacesNullRelationshipWithResource()
     {
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->states('video')->create();
+        $comment = Comment::factory()->video()->create();
 
         /** @var Video $video */
-        $video = factory(Video::class)->create();
+        $video = Video::factory()->create();
 
         $data = [
             'type' => 'comments',
@@ -172,10 +169,10 @@ class MorphToTest extends TestCase
     public function testUpdateChangesRelatedResource()
     {
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->states('video')->create();
+        $comment = Comment::factory()->video()->create();
 
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'comments',
@@ -202,7 +199,7 @@ class MorphToTest extends TestCase
     public function testReadRelated()
     {
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
         /** @var Post $post */
         $post = $comment->commentable;
 
@@ -221,7 +218,7 @@ class MorphToTest extends TestCase
     public function testReadRelatedNull()
     {
         /** @var Comment $comment */
-        $comment = factory(Comment::class)->create();
+        $comment = Comment::factory()->create();
 
         $this->doReadRelated($comment, 'commentable')
             ->assertReadHasOne(null);
@@ -229,7 +226,7 @@ class MorphToTest extends TestCase
 
     public function testReadRelationship()
     {
-        $comment = factory(Comment::class)->states('video')->create();
+        $comment = Comment::factory()->video()->create();
 
         $this->doReadRelationship($comment, 'commentable')
             ->assertReadHasOneIdentifier('videos', $comment->commentable_id);
@@ -237,7 +234,7 @@ class MorphToTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $comment = factory(Comment::class)->create();
+        $comment = Comment::factory()->create();
 
         $this->doReadRelationship($comment, 'commentable')
             ->assertReadHasOneIdentifier(null);
@@ -245,8 +242,8 @@ class MorphToTest extends TestCase
 
     public function testReplaceNullRelationshipWithRelatedResource()
     {
-        $comment = factory(Comment::class)->create();
-        $post = factory(Post::class)->create();
+        $comment = Comment::factory()->create();
+        $post = Post::factory()->create();
 
         $data = ['type' => 'posts', 'id' => (string) $post->getKey()];
 
@@ -262,7 +259,7 @@ class MorphToTest extends TestCase
 
     public function testReplaceRelationshipWithNull()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
 
         $this->doReplaceRelationship($comment, 'commentable', null)
             ->assertStatus(204);
@@ -276,8 +273,8 @@ class MorphToTest extends TestCase
 
     public function testReplaceRelationshipWithDifferentResource()
     {
-        $comment = factory(Comment::class)->states('post')->create();
-        $video = factory(Video::class)->create();
+        $comment = Comment::factory()->post()->create();
+        $video = Video::factory()->create();
 
         $data = ['type' => 'videos', 'id' => (string) $video->getKey()];
 

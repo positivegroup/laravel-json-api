@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CursorPagingTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -83,10 +82,10 @@ class CursorPagingTest extends TestCase
     public function testOnlyLimit()
     {
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 5)->create([
+        $comments = Comment::factory()->times(5)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('created_at')->values();
 
         $this->actingAsUser()
@@ -108,10 +107,10 @@ class CursorPagingTest extends TestCase
     public function testBefore()
     {
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 10)->create([
+        $comments = Comment::factory()->times(10)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('created_at')->values();
 
         $page = [
@@ -146,10 +145,10 @@ class CursorPagingTest extends TestCase
         $this->strategy->withAscending();
 
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 10)->create([
+        $comments = Comment::factory()->times(10)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortBy('created_at')->values();
 
         $page = [
@@ -182,22 +181,22 @@ class CursorPagingTest extends TestCase
     public function testBeforeWithEqualDates()
     {
         /** @var Collection $equal */
-        $equal = factory(Comment::class, 3)->create([
+        $equal = Comment::factory()->times(3)->create([
             'created_at' => Carbon::now()->subMinute(),
         ])->sortByDesc('id')->values();
 
-        factory(Comment::class)->create([
+        Comment::factory()->create([
             'created_at' => Carbon::now()->subMinutes(2),
         ]);
 
-        $recent = factory(Comment::class)->create([
+        $recent = Comment::factory()->create([
             'created_at' => Carbon::now()->subSecond(),
         ]);
 
         $expected = collect([
             $recent,
             $equal->first(),
-            $equal->get(1)
+            $equal->get(1),
         ]);
 
         $page = [
@@ -236,10 +235,10 @@ class CursorPagingTest extends TestCase
     public function testAfter()
     {
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 10)->create([
+        $comments = Comment::factory()->times(10)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('created_at')->values();
 
         $page = [
@@ -273,10 +272,10 @@ class CursorPagingTest extends TestCase
         $this->strategy->withAscending();
 
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 10)->create([
+        $comments = Comment::factory()->times(10)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortBy('created_at')->values();
 
         $page = [
@@ -308,10 +307,10 @@ class CursorPagingTest extends TestCase
     public function testAfterWithoutMore()
     {
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 4)->create([
+        $comments = Comment::factory()->times(4)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('created_at')->values();
 
         $page = [
@@ -348,20 +347,20 @@ class CursorPagingTest extends TestCase
     public function testAfterWithEqualDates()
     {
         /** @var Collection $equal */
-        $equal = factory(Comment::class, 3)->create([
+        $equal = Comment::factory()->times(3)->create([
             'created_at' => Carbon::now()->subMinute(),
         ])->sortByDesc('id')->values();
 
-        $oldest = factory(Comment::class)->create([
+        $oldest = Comment::factory()->create([
             'created_at' => Carbon::now()->subMinutes(2),
         ]);
 
-        factory(Comment::class)->create(['created_at' => Carbon::now()->subSecond()]);
+        Comment::factory()->create(['created_at' => Carbon::now()->subSecond()]);
 
         $expected = collect([
             $equal->get(1),
             $equal->last(),
-            $oldest
+            $oldest,
         ]);
 
         $page = [
@@ -394,10 +393,10 @@ class CursorPagingTest extends TestCase
             ->withLimitKey('per-page');
 
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 6)->create([
+        $comments = Comment::factory()->times(6)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('created_at')->values();
 
         $page = [
@@ -438,7 +437,7 @@ class CursorPagingTest extends TestCase
                             'page' => [
                                 'ending-before' => $expected->first()->getRouteKey(),
                                 'per-page' => 3,
-                            ]
+                            ],
                         ]
                     ),
                     'next' => $this->buildLink(
@@ -474,10 +473,10 @@ class CursorPagingTest extends TestCase
     public function testBeforeAndAfter()
     {
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 6)->create([
+        $comments = Comment::factory()->times(6)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('created_at')->values();
 
         $page = [
@@ -517,10 +516,10 @@ class CursorPagingTest extends TestCase
         $this->strategy->withColumn('id');
 
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 6)->create([
+        $comments = Comment::factory()->times(6)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('id')->values();
 
         $page = [
@@ -559,10 +558,10 @@ class CursorPagingTest extends TestCase
         $this->strategy->withMetaKey('cursor')->withUnderscoredMetaKeys();
 
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 6)->create([
+        $comments = Comment::factory()->times(6)->create([
             'created_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('created_at')->values();
 
         $page = [
@@ -599,10 +598,10 @@ class CursorPagingTest extends TestCase
         $this->strategy->withColumn('updated_at');
 
         /** @var Collection $comments */
-        $comments = factory(Comment::class, 6)->create([
+        $comments = Comment::factory()->times(6)->create([
             'updated_at' => function () {
                 return $this->faker->dateTime;
-            }
+            },
         ])->sortByDesc('updated_at')->values();
 
         $page = [
@@ -632,9 +631,9 @@ class CursorPagingTest extends TestCase
     }
 
     /**
-     * @param int $limit
-     * @param Comment $prev
-     * @param Comment $next
+     * @param  int  $limit
+     * @param  Comment  $prev
+     * @param  Comment  $next
      * @return array
      */
     private function createLinks($limit, $prev, $next)
@@ -654,7 +653,7 @@ class CursorPagingTest extends TestCase
                     'page' => [
                         'before' => $prev->getRouteKey(),
                         'limit' => $limit,
-                    ]
+                    ],
                 ]
             ),
             'next' => $this->buildLink(

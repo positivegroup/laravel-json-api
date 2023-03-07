@@ -29,12 +29,9 @@ use DummyApp\Video;
  * of resource.
  *
  * In our dummy app, this is the taggables relationship on our tags resource.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class PolymorphicHasManyTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -51,7 +48,7 @@ class PolymorphicHasManyTest extends TestCase
 
     public function testCreateWithEmpty()
     {
-        $tag = factory(Tag::class)->make();
+        $tag = Tag::factory()->make();
 
         $data = [
             'type' => 'tags',
@@ -77,9 +74,9 @@ class PolymorphicHasManyTest extends TestCase
 
     public function testCreateWithRelated()
     {
-        $tag = factory(Tag::class)->make();
-        $post = factory(Post::class)->create();
-        $videos = factory(Video::class, 2)->create();
+        $tag = Tag::factory()->make();
+        $post = Post::factory()->create();
+        $videos = Video::factory()->times(2)->create();
 
         $data = [
             'type' => 'tags',
@@ -118,9 +115,9 @@ class PolymorphicHasManyTest extends TestCase
     public function testUpdateReplacesRelationshipWithEmptyRelationship()
     {
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
-        $tag->posts()->saveMany(factory(Post::class, 2)->create());
-        $tag->videos()->save(factory(Video::class)->create());
+        $tag = Tag::factory()->create();
+        $tag->posts()->saveMany(Post::factory()->times(2)->create());
+        $tag->videos()->save(Video::factory()->create());
 
         $data = [
             'type' => 'tags',
@@ -144,8 +141,8 @@ class PolymorphicHasManyTest extends TestCase
 
     public function testUpdateReplacesEmptyRelationshipWithResource()
     {
-        $tag = factory(Tag::class)->create();
-        $video = factory(Video::class)->create();
+        $tag = Tag::factory()->create();
+        $video = Video::factory()->create();
 
         $data = [
             'type' => 'tags',
@@ -172,9 +169,9 @@ class PolymorphicHasManyTest extends TestCase
 
     public function testUpdateReplacesEmptyRelationshipWithResources()
     {
-        $tag = factory(Tag::class)->create();
-        $post = factory(Post::class)->create();
-        $video = factory(Video::class)->create();
+        $tag = Tag::factory()->create();
+        $post = Post::factory()->create();
+        $video = Video::factory()->create();
 
         $data = [
             'type' => 'tags',
@@ -206,9 +203,9 @@ class PolymorphicHasManyTest extends TestCase
     public function testReadRelated()
     {
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
-        $tag->posts()->sync($post = factory(Post::class)->create());
-        $tag->videos()->sync($videos = factory(Video::class, 2)->create());
+        $tag = Tag::factory()->create();
+        $tag->posts()->sync($post = Post::factory()->create());
+        $tag->videos()->sync($videos = Video::factory()->times(2)->create());
 
         $this->doReadRelated($tag->uuid, 'taggables')->assertFetchedMany([
             ['type' => 'posts', 'id' => $post],
@@ -219,7 +216,7 @@ class PolymorphicHasManyTest extends TestCase
 
     public function testReadEmptyRelated()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $this->doReadRelated($tag->uuid, 'taggables')->assertFetchedNone();
     }
@@ -227,9 +224,9 @@ class PolymorphicHasManyTest extends TestCase
     public function testReadRelationship()
     {
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
-        $tag->posts()->sync($post = factory(Post::class)->create());
-        $tag->videos()->sync($videos = factory(Video::class, 2)->create());
+        $tag = Tag::factory()->create();
+        $tag->posts()->sync($post = Post::factory()->create());
+        $tag->videos()->sync($videos = Video::factory()->times(2)->create());
 
         $this->doReadRelationship($tag->uuid, 'taggables')->assertFetchedToMany([
             ['type' => 'posts', 'id' => $post],
@@ -240,16 +237,16 @@ class PolymorphicHasManyTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $this->doReadRelationship($tag->uuid, 'taggables')->assertFetchedNone();
     }
 
     public function testReplaceEmptyRelationshipWithRelatedResources()
     {
-        $tag = factory(Tag::class)->create();
-        $post = factory(Post::class)->create();
-        $video = factory(Video::class)->create();
+        $tag = Tag::factory()->create();
+        $post = Post::factory()->create();
+        $video = Video::factory()->create();
 
         $this->doReplaceRelationship($tag->uuid, 'taggables', [
             [
@@ -268,8 +265,8 @@ class PolymorphicHasManyTest extends TestCase
     public function testReplaceRelationshipWithNone()
     {
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
-        $tag->videos()->attach(factory(Video::class)->create());
+        $tag = Tag::factory()->create();
+        $tag->videos()->attach(Video::factory()->create());
 
         $this->doReplaceRelationship($tag->uuid, 'taggables', [])
             ->assertStatus(204);
@@ -280,12 +277,12 @@ class PolymorphicHasManyTest extends TestCase
     public function testReplaceRelationshipWithDifferentResources()
     {
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
-        $tag->posts()->attach(factory(Post::class)->create());
-        $tag->videos()->attach(factory(Video::class)->create());
+        $tag = Tag::factory()->create();
+        $tag->posts()->attach(Post::factory()->create());
+        $tag->videos()->attach(Video::factory()->create());
 
-        $posts = factory(Post::class, 2)->create();
-        $video = factory(Video::class)->create();
+        $posts = Post::factory()->times(2)->create();
+        $video = Video::factory()->create();
 
         $this->doReplaceRelationship($tag->uuid, 'taggables', [
             [
@@ -308,12 +305,12 @@ class PolymorphicHasManyTest extends TestCase
     public function testAddToRelationship()
     {
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
-        $tag->posts()->attach($existingPost = factory(Post::class)->create());
-        $tag->videos()->attach($existingVideo = factory(Video::class)->create());
+        $tag = Tag::factory()->create();
+        $tag->posts()->attach($existingPost = Post::factory()->create());
+        $tag->videos()->attach($existingVideo = Video::factory()->create());
 
-        $posts = factory(Post::class, 2)->create();
-        $video = factory(Video::class)->create();
+        $posts = Post::factory()->times(2)->create();
+        $video = Video::factory()->create();
 
         $this->doAddToRelationship($tag->uuid, 'taggables', [
             [
@@ -336,9 +333,9 @@ class PolymorphicHasManyTest extends TestCase
     public function testRemoveFromRelationship()
     {
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
-        $tag->posts()->saveMany($allPosts = factory(Post::class, 3)->create());
-        $tag->videos()->saveMany($allVideos = factory(Video::class, 3)->create());
+        $tag = Tag::factory()->create();
+        $tag->posts()->saveMany($allPosts = Post::factory()->times(3)->create());
+        $tag->videos()->saveMany($allVideos = Video::factory()->times(3)->create());
 
         /** @var Post $post1 */
         $post1 = $allPosts->first();
@@ -370,7 +367,7 @@ class PolymorphicHasManyTest extends TestCase
     }
 
     /**
-     * @param Tag $tag
+     * @param  Tag  $tag
      * @return void
      */
     private function assertNoTaggables(Tag $tag)
@@ -381,9 +378,9 @@ class PolymorphicHasManyTest extends TestCase
     }
 
     /**
-     * @param Tag $tag
-     * @param iterable $posts
-     * @param iterable $videos
+     * @param  Tag  $tag
+     * @param  iterable  $posts
+     * @param  iterable  $videos
      * @return void
      */
     private function assertTaggablesAre(Tag $tag, $posts, $videos)

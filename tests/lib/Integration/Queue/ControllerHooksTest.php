@@ -29,7 +29,6 @@ use Illuminate\Support\Facades\Queue;
 
 class ControllerHooksTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -47,7 +46,7 @@ class ControllerHooksTest extends TestCase
         $mock = $this
             ->getMockBuilder(Adapter::class)
             ->setConstructorArgs([new StandardStrategy()])
-            ->setMethods(['create', 'update','delete'])
+            ->setMethods(['create', 'update', 'delete'])
             ->getMock();
 
         $mock->expects($this->never())->method('create');
@@ -78,7 +77,7 @@ class ControllerHooksTest extends TestCase
 
     public function testUpdate()
     {
-        $download = factory(Download::class)->create(['category' => 'my-posts']);
+        $download = Download::factory()->create(['category' => 'my-posts']);
 
         $data = [
             'type' => 'downloads',
@@ -100,7 +99,7 @@ class ControllerHooksTest extends TestCase
 
     public function testDelete()
     {
-        $download = factory(Download::class)->create();
+        $download = Download::factory()->create();
 
         $this->doDelete($download)->assertAcceptedWithId(
             'http://localhost/api/v1/downloads/queue-jobs',
@@ -111,7 +110,6 @@ class ControllerHooksTest extends TestCase
 
         $this->assertTrue($job->wasClientDispatched(), 'was client dispatched.');
     }
-
 
     /**
      * @return CreateDownload

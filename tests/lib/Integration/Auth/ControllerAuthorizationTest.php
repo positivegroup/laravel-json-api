@@ -22,7 +22,6 @@ use DummyApp\Post;
 
 class ControllerAuthorizationTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -40,12 +39,12 @@ class ControllerAuthorizationTest extends TestCase
     {
         parent::setUp();
 
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->data = [
             'type' => 'comments',
             'attributes' => [
-                'content' => '...'
+                'content' => '...',
             ],
             'relationships' => [
                 'commentable' => [

@@ -27,7 +27,6 @@ use Illuminate\Support\Facades\Event;
 
 class ResourceTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -56,11 +55,11 @@ class ResourceTest extends TestCase
      */
     public function testSortedSearch()
     {
-        $a = factory(Post::class)->create([
+        $a = Post::factory()->create([
             'title' => 'Title A',
         ]);
 
-        $b = factory(Post::class)->create([
+        $b = Post::factory()->create([
             'title' => 'Title B',
         ]);
 
@@ -70,15 +69,15 @@ class ResourceTest extends TestCase
 
     public function testFilteredSearch()
     {
-        $a = factory(Post::class)->create([
+        $a = Post::factory()->create([
             'title' => 'My First Post',
         ]);
 
-        $b = factory(Post::class)->create([
+        $b = Post::factory()->create([
             'title' => 'My Second Post',
         ]);
 
-        factory(Post::class)->create([
+        Post::factory()->create([
             'title' => 'Some Other Post',
         ]);
 
@@ -97,7 +96,7 @@ class ResourceTest extends TestCase
 
     public function testSearchOne()
     {
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'slug' => 'my-first-post',
         ]);
 
@@ -109,7 +108,7 @@ class ResourceTest extends TestCase
 
     public function testSearchOneIsNull()
     {
-        factory(Post::class)->create(['slug' => 'my-first-post']);
+        Post::factory()->create(['slug' => 'my-first-post']);
 
         $this->doSearch(['filter' => ['slug' => 'my-second-post']])
             ->assertReadHasOne(null);
@@ -130,7 +129,7 @@ class ResourceTest extends TestCase
      */
     public function testSearchWithIncluded()
     {
-        factory(Comment::class, 5)->states('post')->create();
+        Comment::factory()->times(5)->post()->create();
 
         $this->doSearch(['include' => 'comments.created-by'])
             ->assertSearchedMany();
@@ -141,7 +140,7 @@ class ResourceTest extends TestCase
      */
     public function testSearchById()
     {
-        $models = factory(Post::class, 2)->create();
+        $models = Post::factory()->times(2)->create();
         // this model should not be in the search results
         $this->createPost();
 
@@ -188,7 +187,7 @@ class ResourceTest extends TestCase
 
     public function testCreateInvalid()
     {
-        $model = factory(Post::class)->make();
+        $model = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -234,7 +233,7 @@ class ResourceTest extends TestCase
      */
     public function testCreateWithoutRequiredMember()
     {
-        $model = factory(Post::class)->make();
+        $model = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -275,7 +274,6 @@ class ResourceTest extends TestCase
             $retrieved++;
         });
 
-
         $model = $this->createPost();
         $model->tags()->create(['name' => 'Important']);
 
@@ -291,7 +289,7 @@ class ResourceTest extends TestCase
      */
     public function testReadSoftDeleted()
     {
-        $post = factory(Post::class)->create(['deleted_at' => Carbon::now()]);
+        $post = Post::factory()->create(['deleted_at' => Carbon::now()]);
 
         $this->doRead($post)->assertFetchedOneExact(
             $this->serialize($post)
@@ -400,7 +398,7 @@ class ResourceTest extends TestCase
         });
 
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -429,7 +427,7 @@ class ResourceTest extends TestCase
      */
     public function testUpdateWithUnrecognisedRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -461,7 +459,7 @@ class ResourceTest extends TestCase
      */
     public function testUpdateWithRelationshipAsAttribute()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -536,7 +534,7 @@ class ResourceTest extends TestCase
     {
         Event::fake();
 
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -549,20 +547,20 @@ class ResourceTest extends TestCase
         $this->doUpdate($data)->assertUpdated($data);
         $this->assertSoftDeleted('posts', [$post->getKeyName() => $post->getKey()]);
 
-        Event::assertDispatched("eloquent.deleting: " . Post::class, function ($name, $actual) use ($post) {
+        Event::assertDispatched('eloquent.deleting: '.Post::class, function ($name, $actual) use ($post) {
             return $post->is($actual);
         });
 
-        Event::assertDispatched("eloquent.deleted: " . Post::class, function ($name, $actual) use ($post) {
+        Event::assertDispatched('eloquent.deleted: '.Post::class, function ($name, $actual) use ($post) {
             return $post->is($actual);
         });
 
-        Event::assertNotDispatched("eloquent.forceDeleted: " . Post::class);
+        Event::assertNotDispatched('eloquent.forceDeleted: '.Post::class);
     }
 
     public function testSoftDeleteWithBoolean()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -584,7 +582,7 @@ class ResourceTest extends TestCase
      */
     public function testUpdateAndSoftDelete()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -607,7 +605,7 @@ class ResourceTest extends TestCase
     {
         Event::fake();
 
-        $post = factory(Post::class)->create(['deleted_at' => '2018-01-01 12:00:00']);
+        $post = Post::factory()->create(['deleted_at' => '2018-01-01 12:00:00']);
 
         $data = [
             'type' => 'posts',
@@ -624,7 +622,7 @@ class ResourceTest extends TestCase
             'deleted_at' => null,
         ]);
 
-        Event::assertDispatched("eloquent.restored: " . Post::class, function ($name, $actual) use ($post) {
+        Event::assertDispatched('eloquent.restored: '.Post::class, function ($name, $actual) use ($post) {
             return $post->is($actual);
         });
     }
@@ -633,7 +631,7 @@ class ResourceTest extends TestCase
     {
         Event::fake();
 
-        $post = factory(Post::class)->create(['deleted_at' => '2018-01-01 12:00:00']);
+        $post = Post::factory()->create(['deleted_at' => '2018-01-01 12:00:00']);
 
         $data = [
             'type' => 'posts',
@@ -653,7 +651,7 @@ class ResourceTest extends TestCase
             'deleted_at' => null,
         ]);
 
-        Event::assertDispatched("eloquent.restored: " . Post::class, function ($name, $actual) use ($post) {
+        Event::assertDispatched('eloquent.restored: '.Post::class, function ($name, $actual) use ($post) {
             return $post->is($actual);
         });
     }
@@ -665,7 +663,7 @@ class ResourceTest extends TestCase
     {
         Event::fake();
 
-        $post = factory(Post::class)->create(['deleted_at' => '2018-01-01 12:00:00']);
+        $post = Post::factory()->create(['deleted_at' => '2018-01-01 12:00:00']);
 
         $data = [
             'type' => 'posts',
@@ -684,7 +682,7 @@ class ResourceTest extends TestCase
             'title' => 'My Post Is Restored',
         ]);
 
-        Event::assertDispatched("eloquent.restored: " . Post::class, function ($name, $actual) use ($post) {
+        Event::assertDispatched('eloquent.restored: '.Post::class, function ($name, $actual) use ($post) {
             return $post->is($actual);
         });
     }
@@ -701,11 +699,11 @@ class ResourceTest extends TestCase
         $this->doDelete($post)->assertDeleted();
         $this->assertDatabaseMissing('posts', [$post->getKeyName() => $post->getKey()]);
 
-        Event::assertDispatched("eloquent.deleting: " . Post::class, function ($name, $actual) use ($post) {
+        Event::assertDispatched('eloquent.deleting: '.Post::class, function ($name, $actual) use ($post) {
             return $post->is($actual);
         });
 
-        Event::assertDispatched("eloquent.deleted: " . Post::class, function ($name, $actual) use ($post) {
+        Event::assertDispatched('eloquent.deleted: '.Post::class, function ($name, $actual) use ($post) {
             return $post->is($actual);
         });
 
@@ -713,7 +711,7 @@ class ResourceTest extends TestCase
          * Force deleted event was added in Laravel 5.6.
          */
         if (Semver::satisfies($this->app->version(), '>=5.6')) {
-            Event::assertDispatched("eloquent.forceDeleted: " . Post::class, function ($name, $actual) use ($post) {
+            Event::assertDispatched('eloquent.forceDeleted: '.Post::class, function ($name, $actual) use ($post) {
                 return $post->is($actual);
             });
         }
@@ -724,7 +722,7 @@ class ResourceTest extends TestCase
      */
     public function testCannotDeletePostHasComments()
     {
-        $post = factory(Comment::class)->states('post')->create()->commentable;
+        $post = Comment::factory()->post()->create()->commentable;
 
         $expected = [
             'title' => 'Not Deletable',
@@ -738,12 +736,12 @@ class ResourceTest extends TestCase
     /**
      * Just a helper method so that we get a type-hinted model back...
      *
-     * @param bool $create
+     * @param  bool  $create
      * @return Post
      */
     private function createPost($create = true)
     {
-        $builder = factory(Post::class);
+        $builder = Post::factory();
 
         return $create ? $builder->create() : $builder->make();
     }
@@ -751,7 +749,7 @@ class ResourceTest extends TestCase
     /**
      * Get the posts resource that we expect in server responses.
      *
-     * @param Post $post
+     * @param  Post  $post
      * @return array
      */
     private function serialize(Post $post)

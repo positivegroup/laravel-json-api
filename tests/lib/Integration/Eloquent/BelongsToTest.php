@@ -29,12 +29,9 @@ use DummyApp\User;
  * relationship.
  *
  * In our dummy app, this is the author relationship on the post model.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class BelongsToTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -43,7 +40,7 @@ class BelongsToTest extends TestCase
     public function testCreateWithNull()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->make([
+        $post = Post::factory()->make([
             'author_id' => null,
         ]);
 
@@ -74,7 +71,7 @@ class BelongsToTest extends TestCase
     public function testCreateWithRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -106,7 +103,7 @@ class BelongsToTest extends TestCase
     public function testUpdateReplacesRelationshipWithNull()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -134,12 +131,12 @@ class BelongsToTest extends TestCase
     public function testUpdateReplacesNullRelationshipWithResource()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'author_id' => null,
         ]);
 
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -170,11 +167,11 @@ class BelongsToTest extends TestCase
     public function testUpdateChangesRelatedResource()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $this->assertNotNull($post->author_id);
 
         /** @var User $user */
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -205,7 +202,7 @@ class BelongsToTest extends TestCase
     public function testReadRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         /** @var User $user */
         $user = $post->author;
 
@@ -224,7 +221,7 @@ class BelongsToTest extends TestCase
     public function testReadRelatedNull()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'author_id' => null,
         ]);
 
@@ -234,7 +231,7 @@ class BelongsToTest extends TestCase
 
     public function testReadRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelationship($post, 'author')
             ->assertReadHasOneIdentifier('users', (string) $post->author_id);
@@ -242,7 +239,7 @@ class BelongsToTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'author_id' => null,
         ]);
 
@@ -252,11 +249,11 @@ class BelongsToTest extends TestCase
 
     public function testReplaceNullRelationshipWithRelatedResource()
     {
-        $post = factory(Post::class)->create([
+        $post = Post::factory()->create([
             'author_id' => null,
         ]);
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $data = ['type' => 'users', 'id' => (string) $user->getKey()];
 
@@ -271,7 +268,7 @@ class BelongsToTest extends TestCase
 
     public function testReplaceRelationshipWithNull()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $this->assertNotNull($post->author_id);
 
         $this->doReplaceRelationship($post, 'author', null)
@@ -285,10 +282,10 @@ class BelongsToTest extends TestCase
 
     public function testReplaceRelationshipWithDifferentResource()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $this->assertNotNull($post->author_id);
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $data = ['type' => 'users', 'id' => (string) $user->getKey()];
 
@@ -306,8 +303,8 @@ class BelongsToTest extends TestCase
      */
     public function testInvalidReplace()
     {
-        $post = factory(Post::class)->create();
-        $country = factory(Country::class)->create();
+        $post = Post::factory()->create();
+        $country = Country::factory()->create();
 
         $data = ['type' => 'countries', 'id' => (string) $country->getRouteKey()];
 

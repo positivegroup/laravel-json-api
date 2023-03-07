@@ -27,7 +27,6 @@ use Illuminate\Queue\SerializesModels;
 
 class TestJob implements ShouldQueue
 {
-
     use Dispatchable,
         ClientDispatchable,
         SerializesModels,
@@ -53,6 +52,7 @@ class TestJob implements ShouldQueue
      * Execute the job.
      *
      * @return Download|null
+     *
      * @throws \Exception
      */
     public function handle(): ?Download
@@ -64,10 +64,11 @@ class TestJob implements ShouldQueue
         if ($this->model) {
             $this->model->delete();
             $this->didComplete();
+
             return null;
         }
 
-        $download = factory(Download::class)->create();
+        $download = Download::factory()->create();
         $this->didCreate($download);
 
         return $download;

@@ -22,7 +22,6 @@ use DummyApp\Video;
 
 class ClientGeneratedIdTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -30,7 +29,7 @@ class ClientGeneratedIdTest extends TestCase
 
     public function testCreate()
     {
-        $video = factory(Video::class)->make();
+        $video = Video::factory()->make();
 
         $data = [
             'type' => 'videos',
@@ -64,7 +63,7 @@ class ClientGeneratedIdTest extends TestCase
 
     public function testCreateWithMissingId()
     {
-        $video = factory(Video::class)->make();
+        $video = Video::factory()->make();
 
         $data = [
             'type' => 'videos',
@@ -91,7 +90,7 @@ class ClientGeneratedIdTest extends TestCase
 
     public function testCreateWithInvalidId()
     {
-        $video = factory(Video::class)->make();
+        $video = Video::factory()->make();
 
         $data = [
             'type' => 'videos',
@@ -119,7 +118,7 @@ class ClientGeneratedIdTest extends TestCase
 
     public function testCreateWithConflict()
     {
-        $video = factory(Video::class)->create();
+        $video = Video::factory()->create();
 
         $data = [
             'type' => 'videos',
@@ -147,7 +146,7 @@ class ClientGeneratedIdTest extends TestCase
 
     public function testUpdated()
     {
-        $video = factory(Video::class)->create();
+        $video = Video::factory()->create();
 
         $data = [
             'type' => 'videos',
@@ -168,5 +167,4 @@ class ClientGeneratedIdTest extends TestCase
             'title' => 'A Video',
         ]);
     }
-
 }

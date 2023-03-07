@@ -23,7 +23,6 @@ use DummyApp\Post;
 
 class IssueTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -61,12 +60,13 @@ class IssueTest extends TestCase
 
     /**
      * @param $hook
-     * @param array $unexpected
+     * @param  array  $unexpected
+     *
      * @dataProvider createProvider
      */
     public function testCreate($hook, array $unexpected)
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -84,8 +84,6 @@ class IssueTest extends TestCase
                 ],
             ],
         ];
-
-
 
         $this->withResponse($hook, $unexpected)->doCreate($data)->assertStatus(202);
     }
@@ -105,12 +103,13 @@ class IssueTest extends TestCase
 
     /**
      * @param $hook
-     * @param array $unexpected
+     * @param  array  $unexpected
+     *
      * @dataProvider updateProvider
      */
     public function testUpdate($hook, array $unexpected)
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -136,19 +135,20 @@ class IssueTest extends TestCase
 
     /**
      * @param $hook
-     * @param array $unexpected
+     * @param  array  $unexpected
+     *
      * @dataProvider deleteProvider
      */
     public function testDelete($hook, array $unexpected)
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->withResponse($hook, $unexpected)->doDelete($post)->assertStatus(202);
     }
 
     /**
      * @param $hook
-     * @param array $unexpected
+     * @param  array  $unexpected
      *      hooks that must not be invoked.
      * @return $this
      */

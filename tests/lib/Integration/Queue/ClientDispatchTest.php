@@ -27,7 +27,6 @@ use Illuminate\Support\Facades\Queue;
 
 class ClientDispatchTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -139,7 +138,7 @@ class ClientDispatchTest extends TestCase
 
     public function testUpdate()
     {
-        $download = factory(Download::class)->create(['category' => 'my-posts']);
+        $download = Download::factory()->create(['category' => 'my-posts']);
 
         $data = [
             'type' => 'downloads',
@@ -181,7 +180,7 @@ class ClientDispatchTest extends TestCase
 
     public function testDelete()
     {
-        $download = factory(Download::class)->create();
+        $download = Download::factory()->create();
 
         $this->doDelete($download)->assertAcceptedWithId('http://localhost/api/v1/downloads/queue-jobs', [
             'type' => 'queue-jobs',

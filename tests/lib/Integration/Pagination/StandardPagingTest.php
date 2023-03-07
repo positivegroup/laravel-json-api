@@ -24,7 +24,6 @@ use DummyApp\Video;
 
 class StandardPagingTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -51,7 +50,7 @@ class StandardPagingTest extends TestCase
      */
     public function testDefaultPagination()
     {
-        $posts = factory(Post::class, 4)->create();
+        $posts = Post::factory()->times(4)->create();
 
         $this->doSearch()->assertFetchedPage($posts, null, [
             'current-page' => 1,
@@ -91,7 +90,7 @@ class StandardPagingTest extends TestCase
 
     public function testPage1()
     {
-        $posts = factory(Post::class, 4)->create();
+        $posts = Post::factory()->times(4)->create();
 
         $meta = [
             'current-page' => 1,
@@ -123,7 +122,7 @@ class StandardPagingTest extends TestCase
 
     public function testPage2()
     {
-        $posts = factory(Post::class, 4)->create();
+        $posts = Post::factory()->times(4)->create();
 
         $meta = [
             'current-page' => 2,
@@ -155,7 +154,7 @@ class StandardPagingTest extends TestCase
 
     public function testPageWithReverseKey()
     {
-        $posts = factory(Post::class, 4)->create()->reverse()->values();
+        $posts = Post::factory()->times(4)->create()->reverse()->values();
 
         $this->doSearch([
             'page' => ['number' => 1, 'size' => 3],
@@ -172,34 +171,34 @@ class StandardPagingTest extends TestCase
      */
     public function testDeterministicOrder()
     {
-        $first = factory(Video::class)->create([
+        $first = Video::factory()->create([
             'created_at' => Carbon::now()->subWeek(),
         ]);
 
-        $f = factory(Video::class)->create([
+        $f = Video::factory()->create([
             'uuid' => 'f3b3bea3-dca0-4ef9-b06c-43583a7e6118',
             'created_at' => Carbon::now()->subHour(),
         ]);
 
-        $d = factory(Video::class)->create([
+        $d = Video::factory()->create([
             'uuid' => 'd215f35c-feb7-4cc5-9631-61742f00d0b2',
             'created_at' => $f->created_at,
         ]);
 
-        $c = factory(Video::class)->create([
+        $c = Video::factory()->create([
             'uuid' => 'cbe17134-d7e2-4509-ba2c-3b3b5e3b2cbe',
             'created_at' => $f->created_at,
         ]);
 
         $this->withResourceType('videos')->doSearch([
             'page' => ['number' => '1', 'size' => '3'],
-            'sort' => 'created-at'
+            'sort' => 'created-at',
         ])->assertFetchedManyInOrder([$first, $c, $d]);
     }
 
     public function testCustomPageKeys()
     {
-        factory(Post::class, 4)->create();
+        Post::factory()->times(4)->create();
         $this->strategy->withPageKey('page')->withPerPageKey('limit');
 
         $links = [
@@ -223,7 +222,7 @@ class StandardPagingTest extends TestCase
 
     public function testSimplePagination()
     {
-        factory(Post::class, 4)->create();
+        Post::factory()->times(4)->create();
         $this->strategy->withSimplePagination();
 
         $meta = [
@@ -251,7 +250,7 @@ class StandardPagingTest extends TestCase
 
     public function testCustomMetaKeys()
     {
-        $posts = factory(Post::class, 4)->create();
+        $posts = Post::factory()->times(4)->create();
         $this->strategy->withMetaKey('paginator')->withUnderscoredMetaKeys();
 
         $meta = [
@@ -269,7 +268,7 @@ class StandardPagingTest extends TestCase
 
     public function testMetaNotNested()
     {
-        factory(Post::class, 4)->create();
+        Post::factory()->times(4)->create();
         $this->strategy->withMetaKey(null);
 
         $this->doSearch(['page' => ['number' => 1, 'size' => 3]])->assertExactMeta([
@@ -284,11 +283,10 @@ class StandardPagingTest extends TestCase
 
     public function testPageParametersAreValidated()
     {
-        factory(Post::class, 4)->create();
+        Post::factory()->times(4)->create();
 
         $this->doSearch(['page' => ['number' => 1, 'size' => 999]])->assertError(400, [
-            'source' => ['parameter' => 'page.size']
+            'source' => ['parameter' => 'page.size'],
         ]);
     }
-
 }

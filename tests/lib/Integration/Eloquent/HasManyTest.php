@@ -29,12 +29,9 @@ use DummyApp\User;
  * has-many relationship.
  *
  * In our dummy app, this is the users relationship on a country model.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class HasManyTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -43,7 +40,7 @@ class HasManyTest extends TestCase
     public function testCreateWithEmpty()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->make();
+        $country = Country::factory()->make();
 
         $data = [
             'type' => 'countries',
@@ -71,8 +68,8 @@ class HasManyTest extends TestCase
     public function testCreateWithRelated()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->make();
-        $user = factory(User::class)->create();
+        $country = Country::factory()->make();
+        $user = User::factory()->create();
 
         $data = [
             'type' => 'countries',
@@ -105,8 +102,8 @@ class HasManyTest extends TestCase
     public function testCreateWithManyRelated()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->make();
-        $users = factory(User::class, 2)->create();
+        $country = Country::factory()->make();
+        $users = User::factory()->times(2)->create();
 
         $data = [
             'type' => 'countries',
@@ -140,8 +137,8 @@ class HasManyTest extends TestCase
     public function testUpdateReplacesRelationshipWithEmptyRelationship()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 2)->create();
+        $country = Country::factory()->create();
+        $users = User::factory()->times(2)->create();
         $country->users()->saveMany($users);
 
         $data = [
@@ -166,8 +163,8 @@ class HasManyTest extends TestCase
     public function testUpdateReplacesEmptyRelationshipWithResource()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->create();
-        $user = factory(User::class)->create();
+        $country = Country::factory()->create();
+        $user = User::factory()->create();
 
         $data = [
             'type' => 'countries',
@@ -193,10 +190,10 @@ class HasManyTest extends TestCase
     public function testUpdateChangesRelatedResources()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->create();
-        $country->users()->saveMany(factory(User::class, 3)->create());
+        $country = Country::factory()->create();
+        $country->users()->saveMany(User::factory()->times(3)->create());
 
-        $users = factory(User::class, 2)->create();
+        $users = User::factory()->times(2)->create();
 
         $data = [
             'type' => 'countries',
@@ -226,8 +223,8 @@ class HasManyTest extends TestCase
     public function testReadRelated()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 2)->create();
+        $country = Country::factory()->create();
+        $users = User::factory()->times(2)->create();
 
         $country->users()->saveMany($users);
 
@@ -238,7 +235,7 @@ class HasManyTest extends TestCase
     public function testReadRelatedEmpty()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->doReadRelated($country, 'users')
             ->assertReadHasMany(null);
@@ -246,19 +243,19 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithFilter()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
-        $a = factory(User::class)->create([
+        $a = User::factory()->create([
             'name' => 'John Doe',
             'country_id' => $country->getKey(),
         ]);
 
-        $b = factory(User::class)->create([
+        $b = User::factory()->create([
             'name' => 'Jane Doe',
             'country_id' => $country->getKey(),
         ]);
 
-        factory(User::class)->create([
+        User::factory()->create([
             'name' => 'Frankie Manning',
             'country_id' => $country->getKey(),
         ]);
@@ -269,7 +266,7 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithInvalidFilter()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->doReadRelated($country, 'users', ['filter' => ['name' => '']])->assertError(400, [
             'status' => '400',
@@ -280,14 +277,14 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithSort()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
-        $a = factory(User::class)->create([
+        $a = User::factory()->create([
             'name' => 'John Doe',
             'country_id' => $country->getKey(),
         ]);
 
-        $b = factory(User::class)->create([
+        $b = User::factory()->create([
             'name' => 'Jane Doe',
             'country_id' => $country->getKey(),
         ]);
@@ -298,7 +295,7 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithInvalidSort()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         // code is a valid sort on the countries resource, but not on the users resource.
         $this->doReadRelated($country, 'users', ['sort' => 'code'])->assertError(400, [
@@ -309,10 +306,10 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithInclude()
     {
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 2)->create();
+        $country = Country::factory()->create();
+        $users = User::factory()->times(2)->create();
         $country->users()->saveMany($users);
-        $phone = factory(Phone::class)->create(['user_id' => $users[0]->getKey()]);
+        $phone = Phone::factory()->create(['user_id' => $users[0]->getKey()]);
 
         $this->doReadRelated($country, 'users', ['include' => 'phone'])
             ->assertReadHasMany('users', $users)
@@ -321,7 +318,7 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithInvalidInclude()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->doReadRelated($country, 'users', ['include' => 'foo'])->assertError(400, [
             'source' => ['parameter' => 'include'],
@@ -330,8 +327,8 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithPagination()
     {
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 3)->create();
+        $country = Country::factory()->create();
+        $users = User::factory()->times(3)->create();
         $country->users()->saveMany($users);
 
         $this->doReadRelated($country, 'users', ['page' => ['number' => 1, 'size' => 2]])
@@ -341,7 +338,7 @@ class HasManyTest extends TestCase
 
     public function testReadRelatedWithInvalidPagination()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->doReadRelated($country, 'users', ['page' => ['number' => 0, 'size' => 10]])->assertError(400, [
             'source' => ['parameter' => 'page.number'],
@@ -350,8 +347,8 @@ class HasManyTest extends TestCase
 
     public function testReadRelationship()
     {
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 2)->create();
+        $country = Country::factory()->create();
+        $users = User::factory()->times(2)->create();
         $country->users()->saveMany($users);
 
         $this->doReadRelationship($country, 'users')
@@ -360,7 +357,7 @@ class HasManyTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->doReadRelationship($country, 'users')
             ->assertReadHasManyIdentifiers(null);
@@ -368,8 +365,8 @@ class HasManyTest extends TestCase
 
     public function testReplaceEmptyRelationshipWithRelatedResource()
     {
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 2)->create();
+        $country = Country::factory()->create();
+        $users = User::factory()->times(2)->create();
 
         $data = $users->map(function (User $user) {
             return ['type' => 'users', 'id' => (string) $user->getRouteKey()];
@@ -383,8 +380,8 @@ class HasManyTest extends TestCase
 
     public function testReplaceRelationshipWithNone()
     {
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 2)->create();
+        $country = Country::factory()->create();
+        $users = User::factory()->times(2)->create();
         $country->users()->saveMany($users);
 
         $this->doReplaceRelationship($country, 'users', [])
@@ -395,10 +392,10 @@ class HasManyTest extends TestCase
 
     public function testReplaceRelationshipWithDifferentResources()
     {
-        $country = factory(Country::class)->create();
-        $country->users()->saveMany(factory(User::class, 2)->create());
+        $country = Country::factory()->create();
+        $country->users()->saveMany(User::factory()->times(2)->create());
 
-        $users = factory(User::class, 3)->create();
+        $users = User::factory()->times(3)->create();
 
         $data = $users->map(function (User $user) {
             return ['type' => 'users', 'id' => (string) $user->getRouteKey()];
@@ -412,11 +409,11 @@ class HasManyTest extends TestCase
 
     public function testAddToRelationship()
     {
-        $country = factory(Country::class)->create();
-        $existing = factory(User::class, 2)->create();
+        $country = Country::factory()->create();
+        $existing = User::factory()->times(2)->create();
         $country->users()->saveMany($existing);
 
-        $add = factory(User::class, 2)->create();
+        $add = User::factory()->times(2)->create();
         $data = $add->map(function (User $user) {
             return ['type' => 'users', 'id' => (string) $user->getRouteKey()];
         })->all();
@@ -429,8 +426,8 @@ class HasManyTest extends TestCase
 
     public function testRemoveFromRelationship()
     {
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 4)->create([
+        $country = Country::factory()->create();
+        $users = User::factory()->times(4)->create([
             'country_id' => $country->getKey(),
         ]);
 
@@ -455,8 +452,8 @@ class HasManyTest extends TestCase
     }
 
     /**
-     * @param Country $country
-     * @param iterable $users
+     * @param  Country  $country
+     * @param  iterable  $users
      * @return void
      */
     private function assertUsersAre(Country $country, $users)

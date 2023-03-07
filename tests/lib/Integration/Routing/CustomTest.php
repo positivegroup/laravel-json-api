@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\Queue;
 
 class CustomTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -72,7 +71,8 @@ class CustomTest extends TestCase
     }
 
     /**
-     * @param string $uri
+     * @param  string  $uri
+     *
      * @dataProvider versionProvider
      */
     public function testVersion(string $uri): void
@@ -83,14 +83,14 @@ class CustomTest extends TestCase
     }
 
     /**
-     * @param string $uri
+     * @param  string  $uri
+     *
      * @dataProvider versionProvider
      */
     public function testVersionContentIsNegotiated(string $uri): void
     {
-        $expected = ['message' =>
-            "The requested resource is capable of generating only content not acceptable "
-            . "according to the Accept headers sent in the request."
+        $expected = ['message' => 'The requested resource is capable of generating only content not acceptable '
+            .'according to the Accept headers sent in the request.',
         ];
 
         $this->get($uri, ['Accept' => 'application/json'])
@@ -100,7 +100,7 @@ class CustomTest extends TestCase
 
     public function testResource(): void
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = url('/api/v1/posts', [$post, 'share']);
 
         $this->postJsonApi($uri, ['include' => 'author'])
@@ -122,12 +122,11 @@ class CustomTest extends TestCase
 
     public function testResourceContentIsNegotiated(): void
     {
-        $expected = ['message' =>
-            "The requested resource is capable of generating only content not acceptable "
-            . "according to the Accept headers sent in the request."
+        $expected = ['message' => 'The requested resource is capable of generating only content not acceptable '
+            .'according to the Accept headers sent in the request.',
         ];
 
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = url('/api/v1/posts', [$post, 'share']);
 
         $this->post($uri, [], ['Accept' => 'application/json'])
@@ -137,7 +136,7 @@ class CustomTest extends TestCase
 
     public function testResourceValidated(): void
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = url('/api/v1/posts', [$post, 'share']);
 
         $expected = [
@@ -151,7 +150,7 @@ class CustomTest extends TestCase
 
     public function testRelationship(): void
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
         $post = $comment->commentable;
         $uri = url('/api/v1/comments', [$comment, 'post', 'share']);
 
@@ -174,12 +173,11 @@ class CustomTest extends TestCase
 
     public function testRelationshipContentIsNegotiated(): void
     {
-        $expected = ['message' =>
-            "The requested resource is capable of generating only content not acceptable "
-            . "according to the Accept headers sent in the request."
+        $expected = ['message' => 'The requested resource is capable of generating only content not acceptable '
+            .'according to the Accept headers sent in the request.',
         ];
 
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
         $uri = url('/api/v1/comments', [$comment, 'post', 'share']);
 
         $this->post($uri, [], ['Accept' => 'application/json'])
@@ -189,7 +187,7 @@ class CustomTest extends TestCase
 
     public function testRelationshipValidated(): void
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
         $uri = url('/api/v1/comments', [$comment, 'post', 'share']);
 
         $expected = [

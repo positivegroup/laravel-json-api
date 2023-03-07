@@ -38,12 +38,9 @@ use DummyApp\User;
  * a country to a user. So this kind of update would not be logical: it
  * makes more sense for the client to submit a request asking a user
  * to be associated to a country.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class HasManyThroughTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -52,16 +49,16 @@ class HasManyThroughTest extends TestCase
     public function testReadRelated()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->create();
-        $users = factory(User::class, 2)->create([
+        $country = Country::factory()->create();
+        $users = User::factory()->times(2)->create([
             'country_id' => $country->getKey(),
         ]);
 
-        $post1 = factory(Post::class)->create([
+        $post1 = Post::factory()->create([
             'author_id' => $users->first()->getKey(),
         ]);
 
-        $post2 = factory(Post::class)->create([
+        $post2 = Post::factory()->create([
             'author_id' => $users->last()->getKey(),
         ]);
 
@@ -72,7 +69,7 @@ class HasManyThroughTest extends TestCase
     public function testReadRelatedEmpty()
     {
         /** @var Country $country */
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->doReadRelated($country, 'posts')
             ->assertReadHasMany(null);
@@ -80,12 +77,12 @@ class HasManyThroughTest extends TestCase
 
     public function testReadRelationship()
     {
-        $country = factory(Country::class)->create();
-        $user = factory(User::class)->create([
+        $country = Country::factory()->create();
+        $user = User::factory()->create([
             'country_id' => $country->getKey(),
         ]);
 
-        $posts = factory(Post::class, 3)->create([
+        $posts = Post::factory()->times(3)->create([
             'author_id' => $user->getKey(),
         ]);
 
@@ -95,10 +92,9 @@ class HasManyThroughTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->doReadRelationship($country, 'users')
             ->assertReadHasManyIdentifiers(null);
     }
-
 }

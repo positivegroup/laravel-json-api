@@ -34,12 +34,9 @@ use Orchestra\Testbench\TestCase as BaseTestCase;
 
 /**
  * Class TestCase
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 abstract class TestCase extends BaseTestCase
 {
-
     use MakesJsonApiRequests;
 
     /**
@@ -63,7 +60,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageProviders($app)
@@ -76,7 +73,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      * @return array
      */
     protected function getPackageAliases($app)
@@ -87,7 +84,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param Application $app
+     * @param  Application  $app
      */
     protected function resolveApplicationExceptionHandler($app)
     {
@@ -110,16 +107,17 @@ abstract class TestCase extends BaseTestCase
      * Use the default dummy app routes.
      *
      * @return $this
+     *
      * @deprecated use acceptance tests to test the dummy app.
      */
     protected function withAppRoutes()
     {
         Route::middleware('web')
             ->namespace($namespace = 'DummyApp\Http\Controllers')
-            ->group(__DIR__ . '/../../dummy/routes/web.php');
+            ->group(__DIR__.'/../../dummy/routes/web.php');
 
         Route::group(compact('namespace'), function () {
-            require __DIR__ . '/../../dummy/routes/api.php';
+            require __DIR__.'/../../dummy/routes/api.php';
         });
 
         $this->refreshRoutes();
@@ -128,9 +126,9 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param \Closure $callback
-     * @param array $options
-     * @param string $api
+     * @param  \Closure  $callback
+     * @param  array  $options
+     * @param  string  $api
      * @return $this
      */
     protected function withRoutes(\Closure $callback, array $options = [], string $api = 'v1')
@@ -138,7 +136,6 @@ abstract class TestCase extends BaseTestCase
         Route::group([
             'namespace' => 'DummyApp\Http\Controllers',
         ], function () use ($api, $options, $callback) {
-
             if (empty($options)) {
                 JsonApi::register($api, $callback);
             } else {
@@ -150,7 +147,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param string $api
+     * @param  string  $api
      * @return ApiRegistration
      */
     protected function withFluentRoutes(string $api = 'v1'): ApiRegistration
@@ -166,6 +163,7 @@ abstract class TestCase extends BaseTestCase
      * may be missing from the maps within the router's route collection.
      *
      * @return $this
+     *
      * @see https://github.com/laravel/framework/issues/19020#issuecomment-409873471
      */
     protected function refreshRoutes()
@@ -180,14 +178,15 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param string ...$states
+     * @param  string  ...$states
      * @return $this
      */
     protected function actingAsUser(...$states)
     {
-        $this->actingAs(factory(User::class)->states($states)->create(), 'api');
+        $user = array_reduce($states, fn ($factory, $state) => $factory->{$state}(), User::factory())->create();
+
+        $this->actingAs($user);
 
         return $this;
     }
-
 }

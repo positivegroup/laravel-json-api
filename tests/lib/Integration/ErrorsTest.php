@@ -34,7 +34,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ErrorsTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -89,8 +88,9 @@ class ErrorsTest extends TestCase
     /**
      * Returns a JSON API error when a document is not provided, or is not an object.
      *
-     * @param string $content
-     * @param string $method
+     * @param  string  $content
+     * @param  string  $method
+     *
      * @dataProvider invalidDocumentProvider
      */
     public function testDocumentRequired($content, $method = 'POST')
@@ -98,7 +98,7 @@ class ErrorsTest extends TestCase
         if ('POST' === $method) {
             $uri = $this->resourceUrl();
         } else {
-            $uri = $this->resourceUrl(factory(Post::class)->create());
+            $uri = $this->resourceUrl(Post::factory()->create());
         }
 
         $expected = [
@@ -136,11 +136,12 @@ class ErrorsTest extends TestCase
     /**
      * @param $content
      * @param $method
+     *
      * @dataProvider ignoreDocumentProvider
      */
     public function testIgnoresData($content, $method = 'GET')
     {
-        $model = factory(Post::class)->create();
+        $model = Post::factory()->create();
         $uri = $this->api()->url()->update('posts', $model);
 
         $this->doInvalidRequest($uri, $content, $method)
@@ -203,6 +204,7 @@ class ErrorsTest extends TestCase
         $expected = [
             'errors' => [
                 [
+                    'detail' => 'The route api/v99/posts could not be found.',
                     'title' => 'Not Found',
                     'status' => '404',
                 ],
@@ -283,7 +285,7 @@ class ErrorsTest extends TestCase
      */
     public function testTokenMismatch()
     {
-        $ex = new TokenMismatchException("The token is not valid.");
+        $ex = new TokenMismatchException('The token is not valid.');
 
         $this->request($ex)
             ->assertStatus(419)
@@ -312,7 +314,7 @@ class ErrorsTest extends TestCase
         ]);
 
         $validator = $this->createMock(Validator::class);
-        $validator->method('getMessageBag')->willReturn($messages);
+        $validator->method('errors')->willReturn($messages);
 
         $ex = new ValidationException($validator);
 
@@ -322,7 +324,7 @@ class ErrorsTest extends TestCase
             ->assertExactJson([
                 'errors' => [
                     [
-                        'title' => 'Unprocessable Entity',
+                        'title' => 'Unprocessable Content',
                         'status' => '422',
                         'detail' => $detail,
                         'meta' => ['key' => 'email'],
@@ -335,7 +337,7 @@ class ErrorsTest extends TestCase
     {
         $ex = new HttpException(
             418,
-            "I think I might be a teapot.",
+            'I think I might be a teapot.',
             null,
             ['X-Teapot' => 'True']
         );
@@ -350,7 +352,7 @@ class ErrorsTest extends TestCase
                         'title' => "I'm a teapot",
                         'detail' => 'I think I might be a teapot.',
                         'status' => '418',
-                    ]
+                    ],
                 ],
             ]);
     }
@@ -373,7 +375,7 @@ class ErrorsTest extends TestCase
     }
 
     /**
-     * @param \Exception $ex
+     * @param  \Exception  $ex
      * @return \CloudCreativity\LaravelJsonApi\Testing\TestResponse
      */
     private function request(\Exception $ex)

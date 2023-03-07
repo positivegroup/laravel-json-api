@@ -22,7 +22,6 @@ use DummyApp\Tag;
 
 class ResourceAuthorizerTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -69,7 +68,8 @@ class ResourceAuthorizerTest extends TestCase
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
+     *
      * @depends testCreateUnauthenticated
      */
     public function testCreateUnauthorized(array $data)
@@ -85,7 +85,8 @@ class ResourceAuthorizerTest extends TestCase
     }
 
     /**
-     * @param array $data
+     * @param  array  $data
+     *
      * @depends testCreateUnauthenticated
      */
     public function testCreateAllowed(array $data)
@@ -97,7 +98,7 @@ class ResourceAuthorizerTest extends TestCase
 
     public function testReadUnauthenticated()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $this->doRead($tag)->assertStatus(401)->assertJson([
             'errors' => [
@@ -111,7 +112,7 @@ class ResourceAuthorizerTest extends TestCase
 
     public function testReadAllowed()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $expected = [
             'type' => 'tags',
@@ -134,7 +135,7 @@ class ResourceAuthorizerTest extends TestCase
 
     public function testUpdateUnauthenticated()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
         $data = [
             'type' => 'tags',
             'id' => $tag->getRouteKey(),
@@ -155,7 +156,7 @@ class ResourceAuthorizerTest extends TestCase
 
     public function testUpdateUnauthorized()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
         $data = [
             'type' => 'tags',
             'id' => $tag->getRouteKey(),
@@ -176,7 +177,7 @@ class ResourceAuthorizerTest extends TestCase
 
     public function testUpdateAllowed()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
         $data = [
             'type' => 'tags',
             'id' => $tag->getRouteKey(),
@@ -190,10 +191,9 @@ class ResourceAuthorizerTest extends TestCase
             ->assertStatus(200);
     }
 
-
     public function testDeleteUnauthenticated()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $this->doDelete($tag)->assertStatus(401)->assertJson([
             'errors' => [
@@ -209,7 +209,7 @@ class ResourceAuthorizerTest extends TestCase
 
     public function testDeleteUnauthorized()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $this->actingAsUser()->doDelete($tag)->assertStatus(403)->assertJson([
             'errors' => [
@@ -225,7 +225,7 @@ class ResourceAuthorizerTest extends TestCase
 
     public function testDeleteAllowed()
     {
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $this->actingAsUser('admin')
             ->doDelete($tag)
@@ -238,5 +238,4 @@ class ResourceAuthorizerTest extends TestCase
     {
         $this->markTestIncomplete('@todo');
     }
-
 }

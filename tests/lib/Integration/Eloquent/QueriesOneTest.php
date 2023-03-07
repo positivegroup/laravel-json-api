@@ -24,7 +24,6 @@ use DummyApp\Video;
 
 class QueriesOneTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -32,16 +31,16 @@ class QueriesOneTest extends TestCase
 
     public function testRelated()
     {
-        $tag = factory(Tag::class)->create();
-        $post = factory(Post::class)->create();
+        $tag = Tag::factory()->create();
+        $post = Post::factory()->create();
         $post->tags()->sync($tag);
 
         /** @var Video $video */
-        $video = factory(Video::class, 3)->create()->each(function (Video $video) use ($tag) {
+        $video = Video::factory()->times(3)->create()->each(function (Video $video) use ($tag) {
             $video->tags()->sync($tag);
         })->first();
 
-        factory(Video::class, 2)->create();
+        Video::factory()->times(2)->create();
 
         $expected = [
             'type' => 'videos',
@@ -57,16 +56,16 @@ class QueriesOneTest extends TestCase
 
     public function testRelationship()
     {
-        $tag = factory(Tag::class)->create();
-        $post = factory(Post::class)->create();
+        $tag = Tag::factory()->create();
+        $post = Post::factory()->create();
         $post->tags()->sync($tag);
 
         /** @var Video $video */
-        $video = factory(Video::class, 3)->create()->each(function (Video $video) use ($tag) {
+        $video = Video::factory()->times(3)->create()->each(function (Video $video) use ($tag) {
             $video->tags()->sync($tag);
         })->first();
 
-        factory(Video::class, 2)->create();
+        Video::factory()->times(2)->create();
 
         $this->doReadRelationship($post, 'related-video')
             ->assertReadHasOneIdentifier('videos', $video);

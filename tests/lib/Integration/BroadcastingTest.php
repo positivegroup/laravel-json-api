@@ -23,10 +23,9 @@ use Illuminate\Support\Arr;
 
 class BroadcastingTest extends TestCase
 {
-
     public function testBroadcastWith()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $event = new TestEvent('created', $post);
         $data = $event->broadcastWith();
 

@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\Route;
 
 class IssueTest extends TestCase
 {
-
     /**
      * @var bool
      */
@@ -64,7 +63,7 @@ class IssueTest extends TestCase
 
     public function test()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->getJsonApi("/api/v1/endUsers/{$user->getRouteKey()}")->assertRead([
             'type' => 'endUsers',

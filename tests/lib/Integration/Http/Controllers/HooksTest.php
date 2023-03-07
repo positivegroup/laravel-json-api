@@ -24,7 +24,6 @@ use DummyApp\Tag;
 
 class HooksTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -83,7 +82,7 @@ class HooksTest extends TestCase
      */
     public function testCreate()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -109,7 +108,7 @@ class HooksTest extends TestCase
 
     public function testUnsuccessfulCreate()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -127,7 +126,7 @@ class HooksTest extends TestCase
      */
     public function testRead()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doRead($post)->assertStatus(200);
         $this->assertHooksInvoked('reading', 'did-read');
@@ -143,7 +142,7 @@ class HooksTest extends TestCase
      */
     public function testUpdate()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -159,7 +158,7 @@ class HooksTest extends TestCase
 
     public function testUnsuccessfulUpdate()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -179,7 +178,7 @@ class HooksTest extends TestCase
      */
     public function testDelete()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doDelete($post)->assertStatus(204);
         $this->assertHooksInvoked('deleting', 'deleted');
@@ -193,7 +192,7 @@ class HooksTest extends TestCase
 
     public function testReadRelated()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelated($post, 'author')->assertStatus(200);
 
@@ -207,7 +206,7 @@ class HooksTest extends TestCase
 
     public function testReadRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelationship($post, 'author')->assertStatus(200);
 
@@ -221,7 +220,7 @@ class HooksTest extends TestCase
 
     public function testReplaceRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReplaceRelationship($post, 'author', null)->assertStatus(204);
         $this->assertHooksInvoked('replacing', 'replacing-author', 'replaced-author', 'replaced');
@@ -229,8 +228,8 @@ class HooksTest extends TestCase
 
     public function testAddToRelationship()
     {
-        $post = factory(Post::class)->create();
-        $tag = ['type' => 'tags', 'id' => (string) factory(Tag::class)->create()->uuid];
+        $post = Post::factory()->create();
+        $tag = ['type' => 'tags', 'id' => (string) Tag::factory()->create()->uuid];
 
         $this->doAddToRelationship($post, 'tags', [$tag])->assertStatus(204);
         $this->assertHooksInvoked('adding', 'adding-tags', 'added-tags', 'added');
@@ -238,7 +237,7 @@ class HooksTest extends TestCase
 
     public function testRemoveFromRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         /** @var Tag $tag */
         $tag = $post->tags()->create(['name' => 'news']);
         $identifier = ['type' => 'tags', 'id' => $tag->uuid];
@@ -248,7 +247,7 @@ class HooksTest extends TestCase
     }
 
     /**
-     * @param mixed ...$names
+     * @param  mixed  ...$names
      */
     private function assertHooksInvoked(...$names)
     {

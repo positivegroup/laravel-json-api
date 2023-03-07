@@ -24,7 +24,6 @@ use Illuminate\Support\Facades\Storage;
 
 class UpdateTest extends TestCase
 {
-
     /**
      * @var Avatar
      */
@@ -36,7 +35,7 @@ class UpdateTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->avatar = factory(Avatar::class)->create();
+        $this->avatar = Avatar::factory()->create();
     }
 
     /**
@@ -44,7 +43,8 @@ class UpdateTest extends TestCase
      * HTML form post. This means our API must allow a non-JSON API content media type
      * when updating the resource.
      *
-     * @param string $contentType
+     * @param  string  $contentType
+     *
      * @dataProvider multipartProvider
      */
     public function test(string $contentType): void
@@ -58,7 +58,7 @@ class UpdateTest extends TestCase
         ];
 
         /** @var TestResponse $response */
-        $response = $this->withoutExceptionHandling()->actingAs($this->avatar->user, 'api')->patch(
+        $response = $this->withoutExceptionHandling()->actingAs($this->avatar->user)->patch(
             "/api/v1/avatars/{$this->avatar->getRouteKey()}?include=user",
             ['avatar' => $file],
             ['Content-Type' => $contentType, 'Content-Length' => '1']

@@ -22,7 +22,6 @@ use DummyApp\Video;
 
 class GuardedAttributesTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -36,7 +35,7 @@ class GuardedAttributesTest extends TestCase
     public function test()
     {
         /** @var Video $video */
-        $video = factory(Video::class)->create();
+        $video = Video::factory()->create();
 
         $data = [
             'type' => 'videos',

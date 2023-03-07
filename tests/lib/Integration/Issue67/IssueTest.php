@@ -23,7 +23,6 @@ use DummyApp\Post;
 
 class IssueTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -46,7 +45,7 @@ class IssueTest extends TestCase
      */
     public function test()
     {
-        factory(Post::class)->create();
+        Post::factory()->create();
 
         $response = $this
             ->doSearch(['page' => ['number' => 1, 'size' => 5]])

@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\Storage;
 
 class CustomTest extends TestCase
 {
-
     /**
      * @var bool
      */
@@ -53,7 +52,7 @@ class CustomTest extends TestCase
      */
     public function testDefault(): void
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = url('/api/v1/posts', $post);
 
         $this->withDefaultNegotiator()
@@ -70,7 +69,7 @@ class CustomTest extends TestCase
         Storage::fake('local');
 
         $path = UploadedFile::fake()->create('avatar.jpg')->store('avatars');
-        $avatar = factory(Avatar::class)->create(compact('path'));
+        $avatar = Avatar::factory()->create(compact('path'));
         $uri = url('/api/v1/avatars', $avatar);
 
         $this->withDefaultNegotiator()
@@ -81,7 +80,7 @@ class CustomTest extends TestCase
 
     public function testResourceUsesNamedNegotiator(): void
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $uri = url('/api/v1/posts', $post);
 
         $this->withResourceNegotiator()

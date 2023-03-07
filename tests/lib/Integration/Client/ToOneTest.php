@@ -22,7 +22,6 @@ use DummyApp\Post;
 
 class ToOneTest extends TestCase
 {
-
     /**
      * @var Post
      */
@@ -34,7 +33,7 @@ class ToOneTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->post = factory(Post::class)->create();
+        $this->post = Post::factory()->create();
     }
 
     public function testRelated()

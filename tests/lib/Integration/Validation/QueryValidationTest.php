@@ -23,7 +23,6 @@ use DummyApp\Country;
 
 class QueryValidationTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -108,16 +107,17 @@ class QueryValidationTest extends TestCase
     }
 
     /**
-     * @param array $params
-     * @param string $param
-     * @param string $detail
+     * @param  array  $params
+     * @param  string  $param
+     * @param  string  $detail
+     *
      * @dataProvider searchProvider
      */
     public function testSearch(array $params, string $param, string $detail)
     {
         $expected = [
             'title' => 'Invalid Query Parameter',
-            'status' => "400",
+            'status' => '400',
             'detail' => $detail,
             'source' => ['parameter' => $param],
         ];
@@ -134,7 +134,7 @@ class QueryValidationTest extends TestCase
 
         $expected = [
             'title' => 'Invalid Query Parameter',
-            'status' => "400",
+            'status' => '400',
             'detail' => 'Filter parameter foo is not allowed.',
             'source' => ['parameter' => 'filter'],
             'meta' => [
@@ -151,21 +151,22 @@ class QueryValidationTest extends TestCase
     }
 
     /**
-     * @param array $params
-     * @param string $param
-     * @param string $detail
+     * @param  array  $params
+     * @param  string  $param
+     * @param  string  $detail
+     *
      * @dataProvider searchProvider
      */
     public function testSearchRelated(array $params, string $param, string $detail)
     {
-        $country = factory(Country::class)->create();
+        $country = Country::factory()->create();
 
         $this->resourceType = 'countries';
         $this->doReadRelated($country, 'posts', $params)->assertStatus(400)->assertJson(['errors' => [
             [
                 'detail' => $detail,
                 'source' => ['parameter' => $param],
-            ]
+            ],
         ]]);
     }
 }

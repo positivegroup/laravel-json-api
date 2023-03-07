@@ -17,12 +17,15 @@
 
 namespace DummyApp;
 
+use DummyApp\Factories\TagFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Ramsey\Uuid\Uuid;
 
 class Tag extends Model
 {
+    use HasFactory;
 
     /**
      * @var array
@@ -39,14 +42,14 @@ class Tag extends Model
     ];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function boot()
     {
         parent::boot();
 
         self::creating(function (Tag $tag) {
-            if (!$tag->uuid) {
+            if (! $tag->uuid) {
                 $tag->uuid = Uuid::uuid4()->toString();
             }
         });
@@ -83,5 +86,10 @@ class Tag extends Model
     public function videos()
     {
         return $this->morphedByMany(Video::class, 'taggable');
+    }
+
+    protected static function newFactory()
+    {
+        return TagFactory::new();
     }
 }

@@ -24,7 +24,6 @@ use DummyApp\Download;
 
 class QueueEventsTest extends TestCase
 {
-
     /**
      * @return void
      */
@@ -37,7 +36,7 @@ class QueueEventsTest extends TestCase
     public function testCompletes(): void
     {
         $job = new TestJob();
-        $job->clientJob = factory(ClientJob::class)->create();
+        $job->clientJob = ClientJob::factory()->create();
 
         dispatch($job);
 
@@ -57,7 +56,7 @@ class QueueEventsTest extends TestCase
     {
         $job = new TestJob();
         $job->ex = true;
-        $job->clientJob = factory(ClientJob::class)->create();
+        $job->clientJob = ClientJob::factory()->create();
 
         try {
             dispatch($job);
@@ -77,8 +76,8 @@ class QueueEventsTest extends TestCase
     public function testDoesNotCauseException(): void
     {
         $job = new TestJob();
-        $job->model = factory(Download::class)->create();
-        $job->clientJob = factory(ClientJob::class)->create();
+        $job->model = Download::factory()->create();
+        $job->clientJob = ClientJob::factory()->create();
 
         dispatch($job);
 

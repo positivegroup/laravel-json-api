@@ -22,7 +22,6 @@ use DummyApp\Post;
 
 class DefaultTest extends TestCase
 {
-
     public function testOkWithoutBody()
     {
         $this->getJsonApi('/api/v1/posts')
@@ -53,7 +52,7 @@ class DefaultTest extends TestCase
     public function testEmptyContentLengthHeader()
     {
         $headers = $this->transformHeadersToServerVars(['Content-Length' => '']);
-        $this->call('GET', "/api/v1/posts", [], [], [], $headers)->assertStatus(200);
+        $this->call('GET', '/api/v1/posts', [], [], [], $headers)->assertStatus(200);
     }
 
     /**
@@ -61,7 +60,7 @@ class DefaultTest extends TestCase
      */
     public function testDeleteWithoutBody()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $response = $this->delete("/api/v1/posts/{$post->getKey()}");
         $response->assertStatus(204);
     }
@@ -98,9 +97,8 @@ class DefaultTest extends TestCase
      */
     public function testNotAcceptable()
     {
-        $expected = ['message' =>
-            "The requested resource is capable of generating only content not acceptable "
-            . "according to the Accept headers sent in the request."
+        $expected = ['message' => 'The requested resource is capable of generating only content not acceptable '
+            .'according to the Accept headers sent in the request.',
         ];
 
         $this->get('/api/v1/posts', ['Accept' => 'application/json'])
@@ -140,7 +138,7 @@ class DefaultTest extends TestCase
      */
     private function willPatch()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         return [
             'type' => 'posts',

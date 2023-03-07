@@ -22,11 +22,14 @@ use CloudCreativity\LaravelJsonApi\Api\Api;
 use CloudCreativity\LaravelJsonApi\Contracts\Queue\AsynchronousProcess;
 use CloudCreativity\LaravelJsonApi\Exceptions\RuntimeException;
 use CloudCreativity\LaravelJsonApi\Object\ResourceIdentifier;
+use Database\Factories\ClientJobFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
 
 class ClientJob extends Model implements AsynchronousProcess
 {
+    use HasFactory;
 
     /**
      * @var bool
@@ -89,7 +92,7 @@ class ClientJob extends Model implements AsynchronousProcess
     ];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public static function boot()
     {
@@ -103,11 +106,11 @@ class ClientJob extends Model implements AsynchronousProcess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getResourceType(): string
     {
-        if (!$type = $this->resource_type) {
+        if (! $type = $this->resource_type) {
             throw new RuntimeException('No resource type set.');
         }
 
@@ -115,7 +118,7 @@ class ClientJob extends Model implements AsynchronousProcess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getLocation(): ?string
     {
@@ -126,7 +129,7 @@ class ClientJob extends Model implements AsynchronousProcess
         $type = $this->resource_type;
         $id = $this->resource_id;
 
-        if (!$type || !$id) {
+        if (! $type || ! $id) {
             return null;
         }
 
@@ -134,15 +137,15 @@ class ClientJob extends Model implements AsynchronousProcess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function isPending(): bool
     {
-        return !$this->offsetExists('completed_at');
+        return ! $this->offsetExists('completed_at');
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function dispatching(ClientDispatch $dispatch): void
     {
@@ -157,7 +160,7 @@ class ClientJob extends Model implements AsynchronousProcess
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function processed($job): void
     {
@@ -169,7 +172,7 @@ class ClientJob extends Model implements AsynchronousProcess
     }
 
     /**
-     * @param bool $success
+     * @param  bool  $success
      * @return void
      */
     public function completed(bool $success = true): void
@@ -177,7 +180,7 @@ class ClientJob extends Model implements AsynchronousProcess
         $this->update([
             'attempts' => $this->attempts + 1,
             'completed_at' => Carbon::now(),
-            'failed' => !$success,
+            'failed' => ! $success,
         ]);
     }
 
@@ -186,7 +189,7 @@ class ClientJob extends Model implements AsynchronousProcess
      */
     public function getApi(): Api
     {
-        if (!$api = $this->api) {
+        if (! $api = $this->api) {
             throw new RuntimeException('Expecting API to be set on client job.');
         }
 
@@ -196,7 +199,7 @@ class ClientJob extends Model implements AsynchronousProcess
     /**
      * Set the resource that the client job relates to.
      *
-     * @param mixed $resource
+     * @param  mixed  $resource
      * @return ClientJob
      */
     public function setResource($resource): ClientJob
@@ -218,7 +221,7 @@ class ClientJob extends Model implements AsynchronousProcess
      */
     public function getResource()
     {
-        if (!$this->resource_type || !$this->resource_id) {
+        if (! $this->resource_type || ! $this->resource_id) {
             return null;
         }
 
@@ -227,4 +230,8 @@ class ClientJob extends Model implements AsynchronousProcess
         );
     }
 
+    protected static function newFactory()
+    {
+        return ClientJobFactory::new();
+    }
 }

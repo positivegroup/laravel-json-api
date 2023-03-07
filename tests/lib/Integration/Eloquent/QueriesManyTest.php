@@ -22,7 +22,6 @@ use DummyApp\Post;
 
 class QueriesManyTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -31,18 +30,18 @@ class QueriesManyTest extends TestCase
     public function testRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $expected = collect([
-            factory(Post::class)->create(['author_id' => $post->getKey()]),
+            Post::factory()->create(['author_id' => $post->getKey()]),
             /** @var Post $tagged */
-            $tagged = factory(Post::class)->create(),
+            $tagged = Post::factory()->create(),
         ]);
 
         $tag = $post->tags()->create(['name' => 'jsonapi']);
         $tagged->tags()->sync($tag);
 
-        factory(Post::class, 3)->create();
+        Post::factory()->times(3)->create();
 
         $this->doReadRelated($post, 'related')
             ->assertReadHasMany('posts', $expected);
@@ -51,18 +50,18 @@ class QueriesManyTest extends TestCase
     public function testRelationship()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $expected = collect([
-            factory(Post::class)->create(['author_id' => $post->getKey()]),
+            Post::factory()->create(['author_id' => $post->getKey()]),
             /** @var Post $tagged */
-            $tagged = factory(Post::class)->create(),
+            $tagged = Post::factory()->create(),
         ]);
 
         $tag = $post->tags()->create(['name' => 'jsonapi']);
         $tagged->tags()->sync($tag);
 
-        factory(Post::class, 3)->create();
+        Post::factory()->times(3)->create();
 
         $this->doReadRelationship($post, 'related')
             ->assertReadHasManyIdentifiers('posts', $expected);

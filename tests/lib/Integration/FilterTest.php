@@ -24,12 +24,10 @@ use DummyApp\User;
 
 class FilterTest extends TestCase
 {
-
     /**
      * @var string
      */
     protected $resourceType;
-
 
     /**
      * The `id` filter must work with other filters. In this example, if
@@ -40,12 +38,12 @@ class FilterTest extends TestCase
      */
     public function testIdAsMultiple()
     {
-        $user = factory(User::class)->create();
-        $comments = factory(Comment::class, 2)->create([
+        $user = User::factory()->create();
+        $comments = Comment::factory()->times(2)->create([
             'user_id' => $user->getKey(),
         ]);
 
-        $other = factory(Comment::class)->create();
+        $other = Comment::factory()->create();
 
         $filter = ['filter' => ['created-by' => $user->getRouteKey()]];
 
@@ -57,7 +55,7 @@ class FilterTest extends TestCase
 
     public function testIdWithPaging()
     {
-        $comments = factory(Comment::class, 3)->create([
+        $comments = Comment::factory()->times(3)->create([
             'created_at' => Carbon::now(),
         ])->sortByDesc('id')->values();
 
@@ -77,8 +75,8 @@ class FilterTest extends TestCase
 
     public function testToManyId()
     {
-        $post = factory(Post::class)->create();
-        $comments = factory(Comment::class, 3)->create([
+        $post = Post::factory()->create();
+        $comments = Comment::factory()->times(3)->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
@@ -101,7 +99,7 @@ class FilterTest extends TestCase
      */
     public function testFilterResource()
     {
-        $post = factory(Post::class)->states('published')->create();
+        $post = Post::factory()->published()->create();
 
         $retrieved = 0;
 
@@ -126,8 +124,8 @@ class FilterTest extends TestCase
 
     public function testFilterResourceDoesNotMatch()
     {
-        $post = factory(Post::class)->create();
-        factory(Post::class)->states('published')->create(); // should not appear as the result
+        $post = Post::factory()->create();
+        Post::factory()->published()->create(); // should not appear as the result
 
         $this->resourceType = 'posts';
         $this->doRead($post, ['filter' => ['published' => 1]])->assertSearchedOne(null);
@@ -139,7 +137,7 @@ class FilterTest extends TestCase
      */
     public function testFilterResourceRejectsIdFilter()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->resourceType = 'posts';
         $this->doRead($post, ['filter' => ['id' => '999']])
@@ -155,7 +153,7 @@ class FilterTest extends TestCase
 
     public function testFilterToOne()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
 
         $expected = [
             'type' => 'posts',
@@ -174,13 +172,13 @@ class FilterTest extends TestCase
 
     public function testFilterToOneDoesNotMatch()
     {
-        $post = factory(Post::class)->create();
-        $comment = factory(Comment::class)->create([
+        $post = Post::factory()->create();
+        $comment = Comment::factory()->create([
             'commentable_type' => Post::class,
             'commentable_id' => $post->getKey(),
         ]);
 
-        factory(Comment::class)->states('post')->create();
+        Comment::factory()->post()->create();
 
         $this->resourceType = 'comments';
 

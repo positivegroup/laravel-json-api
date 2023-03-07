@@ -23,13 +23,12 @@ use Illuminate\Support\Facades\Storage;
 
 class ReadTest extends TestCase
 {
-
     /**
      * Test that reading an avatar returns the exact resource we are expecting.
      */
     public function test(): void
     {
-        $avatar = factory(Avatar::class)->create();
+        $avatar = Avatar::factory()->create();
         $expected = $this->serialize($avatar)->toArray();
 
         $this->doRead($avatar)
@@ -44,7 +43,7 @@ class ReadTest extends TestCase
         Storage::fake('local');
 
         $path = UploadedFile::fake()->create('avatar.jpg')->store('avatars');
-        $avatar = factory(Avatar::class)->create(compact('path'));
+        $avatar = Avatar::factory()->create(compact('path'));
 
         $this->withAcceptMediaType('image/*')
             ->doRead($avatar)
@@ -60,7 +59,7 @@ class ReadTest extends TestCase
     public function testDownloadFileDoesNotExist(): void
     {
         $path = 'avatars/does-not-exist.jpg';
-        $avatar = factory(Avatar::class)->create(compact('path'));
+        $avatar = Avatar::factory()->create(compact('path'));
 
         $this->withAcceptMediaType('image/*')
             ->doRead($avatar)
@@ -73,7 +72,7 @@ class ReadTest extends TestCase
      */
     public function testIncludeUser(): void
     {
-        $avatar = factory(Avatar::class)->create();
+        $avatar = Avatar::factory()->create();
         $userId = ['type' => 'users', 'id' => (string) $avatar->user_id];
 
         $expected = $this
@@ -91,7 +90,7 @@ class ReadTest extends TestCase
      */
     public function testInvalidInclude(): void
     {
-        $avatar = factory(Avatar::class)->create();
+        $avatar = Avatar::factory()->create();
 
         $expected = [
             'status' => '400',
@@ -104,12 +103,13 @@ class ReadTest extends TestCase
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
+     *
      * @dataProvider fieldProvider
      */
     public function testSparseFieldset(string $field): void
     {
-        $avatar = factory(Avatar::class)->create();
+        $avatar = Avatar::factory()->create();
         $expected = $this->serialize($avatar)->only($field)->toArray();
         $fields = ['avatars' => $field];
 

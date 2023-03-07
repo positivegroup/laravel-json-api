@@ -22,7 +22,6 @@ use CloudCreativity\LaravelJsonApi\Tests\Unit\TestCase;
 
 class ResourceObjectTest extends TestCase
 {
-
     /**
      * @var array
      */
@@ -152,7 +151,8 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param array $expected
+     * @param  array  $expected
+     *
      * @depends testFields
      */
     public function testGetValue(array $expected): void
@@ -241,8 +241,9 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string $expected
+     * @param  string  $key
+     * @param  string  $expected
+     *
      * @dataProvider pointerProvider
      */
     public function testPointer(string $key, string $expected): void
@@ -252,14 +253,15 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string $expected
+     * @param  string  $key
+     * @param  string  $expected
+     *
      * @dataProvider pointerProvider
      */
     public function testPointerWithPrefix(string $key, string $expected): void
     {
         // @see https://github.com/cloudcreativity/laravel-json-api/issues/255
-        $expected = rtrim("/data" . $expected, '/');
+        $expected = rtrim('/data'.$expected, '/');
 
         $this->assertSame($expected, $this->resource->pointer($key, '/data'));
     }
@@ -278,15 +280,17 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param string $key
-     * @param string|null $expected
+     * @param  string  $key
+     * @param  string|null  $expected
      * @return void
+     *
      * @dataProvider pointerForRelationshipProvider
      */
     public function testPointerForRelationship(string $key, ?string $expected): void
     {
-        if (!is_null($expected)) {
+        if (! is_null($expected)) {
             $this->assertSame($expected, $this->resource->pointerForRelationship($key, '/foo/bar'));
+
             return;
         }
 
@@ -502,7 +506,7 @@ class ResourceObjectTest extends TestCase
     {
         $expected = $this->values;
         $expected['relationships'] = [
-            'foo' => ['data' => ['type' => 'foos', 'id' => 'bar']]
+            'foo' => ['data' => ['type' => 'foos', 'id' => 'bar']],
         ];
 
         $this->assertNotSame($this->resource, $actual = $this->resource->withRelationships($expected['relationships']));

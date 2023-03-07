@@ -26,7 +26,6 @@ use Illuminate\Support\Str;
 
 class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable, \ArrayAccess
 {
-
     /**
      * @var string
      */
@@ -70,12 +69,12 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Create a resource object from the data member of a JSON document.
      *
-     * @param array $data
+     * @param  array  $data
      * @return ResourceObject
      */
     public static function create(array $data): self
     {
-        if (!isset($data['type'])) {
+        if (! isset($data['type'])) {
             throw new \InvalidArgumentException('Expecting a resource type.');
         }
 
@@ -92,12 +91,12 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * ResourceObject constructor.
      *
-     * @param string $type
-     * @param string|null $id
-     * @param array $attributes
-     * @param array $relationships
-     * @param array $meta
-     * @param array $links
+     * @param  string  $type
+     * @param  string|null  $id
+     * @param  array  $attributes
+     * @param  array  $relationships
+     * @param  array  $meta
+     * @param  array  $links
      */
     public function __construct(
         string $type,
@@ -130,7 +129,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param string $field
+     * @param  string  $field
      * @return mixed
      */
     public function __get($field)
@@ -165,15 +164,15 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetExists($offset)
     {
-        return $this->fieldValues->offsetExists($offset);
+        return $this->fieldValues->has($offset);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetGet($offset)
     {
@@ -181,7 +180,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetSet($offset, $value)
     {
@@ -189,7 +188,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function offsetUnset($offset)
     {
@@ -207,7 +206,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Return a new instance with the specified type.
      *
-     * @param string $type
+     * @param  string  $type
      * @return ResourceObject
      */
     public function withType(string $type): self
@@ -234,7 +233,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Return a new instance with the specified id.
      *
-     * @param string|null $id
+     * @param  string|null  $id
      * @return ResourceObject
      */
     public function withId(?string $id): self
@@ -267,7 +266,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Is the field an attribute?
      *
-     * @param string $field
+     * @param  string  $field
      * @return bool
      */
     public function isAttribute(string $field): bool
@@ -278,7 +277,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Return a new instance with the provided attributes.
      *
-     * @param array|Collection $attributes
+     * @param  array|Collection  $attributes
      * @return ResourceObject
      */
     public function withAttributes($attributes): self
@@ -311,7 +310,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Is the field a relationship?
      *
-     * @param string $field
+     * @param  string  $field
      * @return bool
      */
     public function isRelationship(string $field): bool
@@ -322,7 +321,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Return a new instance with the provided relationships.
      *
-     * @param array|Collection $relationships
+     * @param  array|Collection  $relationships
      * @return ResourceObject
      */
     public function withRelationships($relationships): self
@@ -369,7 +368,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Return a new instance with the provided meta.
      *
-     * @param array|Collection $meta
+     * @param  array|Collection  $meta
      * @return ResourceObject
      */
     public function withMeta($meta): self
@@ -435,8 +434,8 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Get a field value.
      *
-     * @param string $field
-     * @param mixed $default
+     * @param  string  $field
+     * @param  mixed  $default
      * @return mixed
      */
     public function get(string $field, $default = null)
@@ -447,7 +446,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Do the fields exist?
      *
-     * @param string ...$fields
+     * @param  string  ...$fields
      * @return bool
      */
     public function has(string ...$fields): bool
@@ -458,7 +457,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Return a new instance with the supplied attribute/relationship fields removed.
      *
-     * @param string ...$fields
+     * @param  string  ...$fields
      * @return ResourceObject
      */
     public function forget(string ...$fields): self
@@ -474,7 +473,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Return a new instance that only has the specified attribute/relationship fields.
      *
-     * @param string ...$fields
+     * @param  string  ...$fields
      * @return ResourceObject
      */
     public function only(string ...$fields): self
@@ -495,9 +494,10 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
      * If the field is a relationship, the `data` member of that relationship will
      * be replaced.
      *
-     * @param string $field
+     * @param  string  $field
      * @param $value
      * @return ResourceObject
+     *
      * @throws \OutOfBoundsException if the field does not exist.
      */
     public function replace(string $field, $value): self
@@ -527,8 +527,8 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
      * Sets the provided value as a relation if it is already defined as a relation.
      * Otherwise, sets it as an attribute.
      *
-     * @param string $field
-     * @param mixed|null $value
+     * @param  string  $field
+     * @param  mixed|null  $value
      * @return ResourceObject
      */
     public function put(string $field, $value): self
@@ -543,8 +543,8 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Set an attribute.
      *
-     * @param string $field
-     * @param mixed|null $value
+     * @param  string  $field
+     * @param  mixed|null  $value
      * @return ResourceObject
      */
     public function putAttr(string $field, $value): self
@@ -559,8 +559,8 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Set a relation.
      *
-     * @param string $field
-     * @param array|null $value
+     * @param  string  $field
+     * @param  array|null  $value
      * @return ResourceObject
      */
     public function putRelation(string $field, ?array $value): self
@@ -576,8 +576,8 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Convert a validation key to a JSON pointer.
      *
-     * @param string $key
-     * @param string $prefix
+     * @param  string  $key
+     * @param  string  $prefix
      * @return string
      */
     public function pointer(string $key, string $prefix = ''): string
@@ -585,23 +585,24 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
         $prefix = rtrim($prefix, '/');
 
         if ('type' === $key) {
-            return $prefix . '/type';
+            return $prefix.'/type';
         }
 
         if ('id' === $key) {
-            return $prefix . '/id';
+            return $prefix.'/id';
         }
 
         $parts = collect(explode('.', $key));
         $field = $parts->first();
 
         if ($this->isAttribute($field)) {
-            return $prefix . '/attributes/' . $parts->implode('/');
+            return $prefix.'/attributes/'.$parts->implode('/');
         }
 
         if ($this->isRelationship($field)) {
-            $name = 1 < $parts->count() ? $field . '/' . $parts->put(0, 'data')->implode('/') : $field;
-            return $prefix . "/relationships/{$name}";
+            $name = 1 < $parts->count() ? $field.'/'.$parts->put(0, 'data')->implode('/') : $field;
+
+            return $prefix."/relationships/{$name}";
         }
 
         return $prefix ? $prefix : '/';
@@ -610,15 +611,15 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     /**
      * Convert a validation key to a JSON pointer for a relationship object within the resource.
      *
-     * @param string $key
-     * @param string $default
+     * @param  string  $key
+     * @param  string  $default
      * @return string
      */
     public function pointerForRelationship(string $key, string $default = '/'): string
     {
         $field = collect(explode('.', $key))->first();
 
-        if (!$this->isRelationship($field)) {
+        if (! $this->isRelationship($field)) {
             throw new \InvalidArgumentException("Field {$field} is not a relationship.");
         }
 
@@ -638,7 +639,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getIterator()
     {
@@ -646,7 +647,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function toArray()
     {
@@ -661,7 +662,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function jsonSerialize()
     {
@@ -672,6 +673,7 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
      * Convert the object to a legacy resource object.
      *
      * @return ResourceObjectInterface
+     *
      * @deprecated 2.0.0
      */
     public function toObject(): ResourceObjectInterface
@@ -722,8 +724,8 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param string $type
-     * @param string|null $id
+     * @param  string  $type
+     * @param  string|null  $id
      * @return ResourceObject
      */
     private function putIdentifier(string $type, ?string $id): self
@@ -735,5 +737,4 @@ class ResourceObject implements Arrayable, \IteratorAggregate, \JsonSerializable
 
         return $copy;
     }
-
 }

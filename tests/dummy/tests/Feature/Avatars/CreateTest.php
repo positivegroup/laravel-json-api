@@ -25,18 +25,18 @@ use Illuminate\Support\Facades\Storage;
 
 class CreateTest extends TestCase
 {
-
     /**
      * Test that a user can upload an avatar to the API using a standard
      * HTML form post. This means our API must allow a non-JSON API content media type
      * when creating the resource.
      *
-     * @param string $contentType
+     * @param  string  $contentType
+     *
      * @dataProvider multipartProvider
      */
     public function test(string $contentType): void
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
         $file = UploadedFile::fake()->create('avatar.jpg');
 
         $expected = [
@@ -45,7 +45,7 @@ class CreateTest extends TestCase
         ];
 
         /** @var TestResponse $response */
-        $response = $this->actingAs($user, 'api')->post(
+        $response = $this->actingAs($user)->post(
             '/api/v1/avatars?include=user',
             ['avatar' => $file],
             ['Content-Type' => $contentType, 'Content-Length' => '1']
@@ -69,10 +69,10 @@ class CreateTest extends TestCase
 
     public function testFileIsRequired(): void
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         /** @var TestResponse $response */
-        $response = $this->actingAs($user, 'api')->post(
+        $response = $this->actingAs($user)->post(
             '/api/v1/avatars',
             ['avatar' => null],
             ['Content-Type' => 'multipart/form-data', 'Content-Length' => '1']

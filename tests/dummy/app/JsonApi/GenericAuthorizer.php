@@ -21,9 +21,8 @@ use CloudCreativity\LaravelJsonApi\Auth\AbstractAuthorizer;
 
 class GenericAuthorizer extends AbstractAuthorizer
 {
-
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function index($type, $request)
     {
@@ -31,7 +30,7 @@ class GenericAuthorizer extends AbstractAuthorizer
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function create($type, $request)
     {
@@ -39,7 +38,7 @@ class GenericAuthorizer extends AbstractAuthorizer
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function read($record, $request)
     {
@@ -47,7 +46,7 @@ class GenericAuthorizer extends AbstractAuthorizer
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function update($record, $request)
     {
@@ -55,11 +54,10 @@ class GenericAuthorizer extends AbstractAuthorizer
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function delete($record, $request)
     {
         $this->can('delete', $record);
     }
-
 }

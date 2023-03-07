@@ -23,7 +23,6 @@ use Neomerx\JsonApi\Encoder\Parameters\EncodingParameters;
 
 class ReadTest extends TestCase
 {
-
     /**
      * @var Post
      */
@@ -35,7 +34,7 @@ class ReadTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->post = factory(Post::class)->create();
+        $this->post = Post::factory()->create();
     }
 
     public function test()

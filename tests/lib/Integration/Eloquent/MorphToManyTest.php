@@ -42,7 +42,7 @@ class MorphToManyTest extends TestCase
     public function testCreateWithEmpty()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->make([
+        $post = Post::factory()->make([
             'author_id' => null,
         ]);
 
@@ -70,9 +70,9 @@ class MorphToManyTest extends TestCase
     public function testCreateWithRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
         /** @var Tag $tag */
-        $tag = factory(Tag::class)->create();
+        $tag = Tag::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -103,8 +103,8 @@ class MorphToManyTest extends TestCase
     public function testCreateWithManyRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->make();
-        $tags = factory(Tag::class, 2)->create();
+        $post = Post::factory()->make();
+        $tags = Tag::factory()->times(2)->create();
 
         $data = [
             'type' => 'posts',
@@ -139,8 +139,8 @@ class MorphToManyTest extends TestCase
     public function testUpdateReplacesRelationshipWithEmptyRelationship()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
-        $tags = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $tags = Tag::factory()->times(2)->create();
         $post->tags()->sync($tags);
 
         $data = [
@@ -163,8 +163,8 @@ class MorphToManyTest extends TestCase
     public function testUpdateReplacesEmptyRelationshipWithResource()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
-        $tag = factory(Tag::class)->create();
+        $post = Post::factory()->create();
+        $tag = Tag::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -193,10 +193,10 @@ class MorphToManyTest extends TestCase
     public function testUpdateChangesRelatedResources()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
-        $post->tags()->sync(factory(Tag::class, 3)->create());
+        $post = Post::factory()->create();
+        $post->tags()->sync(Tag::factory()->times(3)->create());
 
-        $tags = factory(Tag::class, 2)->create();
+        $tags = Tag::factory()->times(2)->create();
 
         $data = [
             'type' => 'posts',
@@ -229,8 +229,8 @@ class MorphToManyTest extends TestCase
     public function testReadRelated()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
-        $tags = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $tags = Tag::factory()->times(2)->create();
         $expected = $tags->sortBy('name');
 
         $post->tags()->sync($tags);
@@ -242,7 +242,7 @@ class MorphToManyTest extends TestCase
     public function testReadRelatedEmpty()
     {
         /** @var Post $post */
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelated($post, 'tags')
             ->assertReadHasMany(null);
@@ -250,8 +250,8 @@ class MorphToManyTest extends TestCase
 
     public function testReadRelationship()
     {
-        $post = factory(Post::class)->create();
-        $tags = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $tags = Tag::factory()->times(2)->create();
         $post->tags()->sync($tags);
 
         $expected = $tags->sortBy('name')->map(function (Tag $tag) {
@@ -264,7 +264,7 @@ class MorphToManyTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelationship($post, 'tags')
             ->assertReadHasManyIdentifiers(null);
@@ -272,8 +272,8 @@ class MorphToManyTest extends TestCase
 
     public function testReplaceEmptyRelationshipWithRelatedResource()
     {
-        $post = factory(Post::class)->create();
-        $tags = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $tags = Tag::factory()->times(2)->create();
 
         $data = $tags->map(function (Tag $tag) {
             return ['type' => 'tags', 'id' => $tag->getRouteKey()];
@@ -287,8 +287,8 @@ class MorphToManyTest extends TestCase
 
     public function testReplaceRelationshipWithNone()
     {
-        $post = factory(Post::class)->create();
-        $tags = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $tags = Tag::factory()->times(2)->create();
         $post->tags()->sync($tags);
 
         $this->doReplaceRelationship($post, 'tags', [])
@@ -299,10 +299,10 @@ class MorphToManyTest extends TestCase
 
     public function testReplaceRelationshipWithDifferentResources()
     {
-        $post = factory(Post::class)->create();
-        $post->tags()->sync(factory(Tag::class, 2)->create());
+        $post = Post::factory()->create();
+        $post->tags()->sync(Tag::factory()->times(2)->create());
 
-        $tags = factory(Tag::class, 3)->create();
+        $tags = Tag::factory()->times(3)->create();
 
         $data = $tags->map(function (Tag $tag) {
             return ['type' => 'tags', 'id' => $tag->getRouteKey()];
@@ -316,11 +316,11 @@ class MorphToManyTest extends TestCase
 
     public function testAddToRelationship()
     {
-        $post = factory(Post::class)->create();
-        $existing = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $existing = Tag::factory()->times(2)->create();
         $post->tags()->sync($existing);
 
-        $add = factory(Tag::class, 2)->create();
+        $add = Tag::factory()->times(2)->create();
         $data = $add->map(function (Tag $tag) {
             return ['type' => 'tags', 'id' => $tag->getRouteKey()];
         })->all();
@@ -341,11 +341,11 @@ class MorphToManyTest extends TestCase
      */
     public function testAddToRelationshipDoesNotCreateDuplicates()
     {
-        $post = factory(Post::class)->create();
-        $existing = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $existing = Tag::factory()->times(2)->create();
         $post->tags()->sync($existing);
 
-        $add = factory(Tag::class, 2)->create();
+        $add = Tag::factory()->times(2)->create();
         $data = $add->merge($existing)->map(function (Tag $tag) {
             return ['type' => 'tags', 'id' => $tag->getRouteKey()];
         })->all();
@@ -358,8 +358,8 @@ class MorphToManyTest extends TestCase
 
     public function testRemoveFromRelationship()
     {
-        $post = factory(Post::class)->create();
-        $tags = factory(Tag::class, 4)->create();
+        $post = Post::factory()->create();
+        $tags = Tag::factory()->times(4)->create();
         $post->tags()->sync($tags);
 
         $data = $tags->take(2)->map(function (Tag $tag) {
@@ -381,11 +381,11 @@ class MorphToManyTest extends TestCase
      */
     public function testRemoveWithIdsThatAreNotRelated()
     {
-        $post = factory(Post::class)->create();
-        $tags = factory(Tag::class, 2)->create();
+        $post = Post::factory()->create();
+        $tags = Tag::factory()->times(2)->create();
         $post->tags()->sync($tags);
 
-        $data = factory(Tag::class, 2)->create()->map(function (Tag $tag) {
+        $data = Tag::factory()->times(2)->create()->map(function (Tag $tag) {
             return ['type' => 'tags', 'id' => $tag->getRouteKey()];
         })->all();
 

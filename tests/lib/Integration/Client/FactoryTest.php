@@ -22,14 +22,13 @@ use GuzzleHttp\Client;
 
 class FactoryTest extends TestCase
 {
-
     /**
      * Uses the host in the JSON API config file.
      */
     public function testWithoutHost()
     {
         $client = $this->api()->client(['handler' => $this->handler]);
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeResource($post, 201);
         $client->createRecord($post);
@@ -50,7 +49,7 @@ class FactoryTest extends TestCase
             'base_uri' => 'http://external.com/api/v1/',
         ]);
 
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeResource($post, 201);
         $client->createRecord($post);
@@ -71,7 +70,7 @@ class FactoryTest extends TestCase
             ['handler' => $this->handler]
         );
 
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeResource($post, 201);
         $client->createRecord($post);
@@ -93,7 +92,7 @@ class FactoryTest extends TestCase
         ]);
 
         $client = $this->api()->client($guzzle);
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeResource($post, 201);
         $client->createRecord($post);
@@ -103,5 +102,4 @@ class FactoryTest extends TestCase
             (string) $this->mock->getLastRequest()->getUri()
         );
     }
-
 }

@@ -17,7 +17,9 @@
 
 namespace DummyApp;
 
+use DummyApp\Factories\VideoFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -25,6 +27,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Video extends Model
 {
+    use HasFactory;
 
     /**
      * @var string
@@ -84,8 +87,8 @@ class Video extends Model
      * Finds videos that have at least one tag that is in common with
      * the tags on the supplied post.
      *
-     * @param Builder $query
-     * @param Post $post
+     * @param  Builder  $query
+     * @param  Post  $post
      * @return Builder
      */
     public function scopeRelated(Builder $query, Post $post)
@@ -95,5 +98,10 @@ class Video extends Model
         return $query->whereHas('tags', function (Builder $q) use ($tags) {
             $q->whereIn('tags.id', $tags);
         });
+    }
+
+    protected static function newFactory()
+    {
+        return VideoFactory::new();
     }
 }

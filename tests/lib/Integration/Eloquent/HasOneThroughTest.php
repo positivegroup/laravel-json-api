@@ -34,12 +34,9 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * This relationship is read-only because it does not make sense to
  * modify the relationship through the resource relationship. I.e. the
  * history resource would be created/modified etc.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class HasOneThroughTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -52,9 +49,9 @@ class HasOneThroughTest extends TestCase
     {
         $this->checkSupported();
 
-        $supplier = factory(Supplier::class)->create();
-        $user = factory(User::class)->create(['supplier_id' => $supplier->getKey()]);
-        $history = factory(History::class)->create(['user_id' => $user->getKey()]);
+        $supplier = Supplier::factory()->create();
+        $user = User::factory()->create(['supplier_id' => $supplier->getKey()]);
+        $history = History::factory()->create(['user_id' => $user->getKey()]);
 
         $data = [
             'type' => 'histories',
@@ -81,7 +78,7 @@ class HasOneThroughTest extends TestCase
     {
         $this->checkSupported();
 
-        $supplier = factory(Supplier::class)->create();
+        $supplier = Supplier::factory()->create();
 
         $this->withoutExceptionHandling()
             ->doReadRelated($supplier, 'user-history')
@@ -92,9 +89,9 @@ class HasOneThroughTest extends TestCase
     {
         $this->checkSupported();
 
-        $supplier = factory(Supplier::class)->create();
-        $user = factory(User::class)->create(['supplier_id' => $supplier->getKey()]);
-        $history = factory(History::class)->create(['user_id' => $user->getKey()]);
+        $supplier = Supplier::factory()->create();
+        $user = User::factory()->create(['supplier_id' => $supplier->getKey()]);
+        $history = History::factory()->create(['user_id' => $user->getKey()]);
 
         $this->withoutExceptionHandling()
             ->willSeeResourceType('histories')
@@ -106,7 +103,7 @@ class HasOneThroughTest extends TestCase
     {
         $this->checkSupported();
 
-        $supplier = factory(Supplier::class)->create();
+        $supplier = Supplier::factory()->create();
 
         $this->withoutExceptionHandling()
             ->doReadRelationship($supplier, 'user-history')
@@ -115,11 +112,12 @@ class HasOneThroughTest extends TestCase
 
     /**
      * @return void
+     *
      * @todo remove when minimum Laravel version is 5.8.
      */
     private function checkSupported(): void
     {
-        if (!class_exists(HasOneThrough::class)) {
+        if (! class_exists(HasOneThrough::class)) {
             $this->markTestSkipped('Eloquent has-one-through not supported.');
         }
     }

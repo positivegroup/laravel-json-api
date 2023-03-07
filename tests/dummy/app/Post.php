@@ -17,7 +17,9 @@
 
 namespace DummyApp;
 
+use DummyApp\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -27,7 +29,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
 {
-
+    use HasFactory;
     use SoftDeletes;
 
     /**
@@ -88,8 +90,8 @@ class Post extends Model
      * - have a tag in common with the provided post; or
      * - are by the same author.
      *
-     * @param Builder $query
-     * @param Post $post
+     * @param  Builder  $query
+     * @param  Post  $post
      * @return Builder
      */
     public function scopeRelated(Builder $query, Post $post)
@@ -102,8 +104,8 @@ class Post extends Model
     }
 
     /**
-     * @param Builder $query
-     * @param bool $published
+     * @param  Builder  $query
+     * @param  bool  $published
      * @return Builder
      */
     public function scopePublished(Builder $query, bool $published = true): Builder
@@ -118,13 +120,13 @@ class Post extends Model
     }
 
     /**
-     * @param Builder $query
-     * @param string $title
+     * @param  Builder  $query
+     * @param  string  $title
      * @return Builder
      */
     public function scopeLikeTitle(Builder $query, string $title): Builder
     {
-        return $query->where('title', 'like', $title . '%');
+        return $query->where('title', 'like', $title.'%');
     }
 
     /**
@@ -133,5 +135,10 @@ class Post extends Model
     protected function getPublishedAttribute()
     {
         return isset($this->attributes['published_at']);
+    }
+
+    protected static function newFactory()
+    {
+        return PostFactory::new();
     }
 }

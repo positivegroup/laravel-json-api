@@ -28,12 +28,9 @@ use DummyApp\Post;
  * relationship.
  *
  * In our dummy app, this is the image relationship on a posts model.
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class MorphOneTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -50,7 +47,7 @@ class MorphOneTest extends TestCase
 
     public function testCreateWithNull()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $data = [
             'type' => 'posts',
@@ -78,8 +75,8 @@ class MorphOneTest extends TestCase
 
     public function testCreateWithRelated()
     {
-        $post = factory(Post::class)->make();
-        $image = factory(Image::class)->create();
+        $post = Post::factory()->make();
+        $image = Image::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -116,10 +113,10 @@ class MorphOneTest extends TestCase
 
     public function testUpdateReplacesRelationshipWithNull()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $image */
-        $image = factory(Image::class)->make();
+        $image = Image::factory()->make();
         $image->imageable()->associate($post)->save();
 
         $data = [
@@ -144,10 +141,10 @@ class MorphOneTest extends TestCase
 
     public function testUpdateReplacesNullRelationshipWithResource()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $image */
-        $image = factory(Image::class)->create();
+        $image = Image::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -174,14 +171,14 @@ class MorphOneTest extends TestCase
 
     public function testUpdateChangesRelatedResource()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $existing */
-        $existing = factory(Image::class)->make();
+        $existing = Image::factory()->make();
         $existing->imageable()->associate($post)->save();
 
         /** @var Image $expected */
-        $expected = factory(Image::class)->create();
+        $expected = Image::factory()->create();
 
         $data = [
             'type' => 'posts',
@@ -214,10 +211,10 @@ class MorphOneTest extends TestCase
 
     public function testReadRelated()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $image */
-        $image = factory(Image::class)->make();
+        $image = Image::factory()->make();
         $image->imageable()->associate($post)->save();
 
         $expected = [
@@ -234,7 +231,7 @@ class MorphOneTest extends TestCase
 
     public function testReadRelatedNull()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelated($post, 'image')
             ->assertReadHasOne(null);
@@ -242,10 +239,10 @@ class MorphOneTest extends TestCase
 
     public function testReadRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $image */
-        $image = factory(Image::class)->make();
+        $image = Image::factory()->make();
         $image->imageable()->associate($post)->save();
 
         $this->doReadRelationship($post, 'image')
@@ -254,7 +251,7 @@ class MorphOneTest extends TestCase
 
     public function testReadEmptyRelationship()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $this->doReadRelationship($post, 'image')
             ->assertReadHasOneIdentifier(null);
@@ -262,10 +259,10 @@ class MorphOneTest extends TestCase
 
     public function testReplaceNullRelationshipWithRelatedResource()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $image */
-        $image = factory(Image::class)->create();
+        $image = Image::factory()->create();
 
         $data = ['type' => 'images', 'id' => (string) $image->getRouteKey()];
 
@@ -281,10 +278,10 @@ class MorphOneTest extends TestCase
 
     public function testReplaceRelationshipWithNull()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $image */
-        $image = factory(Image::class)->create();
+        $image = Image::factory()->create();
         $image->imageable()->associate($post)->save();
 
         $this->doReplaceRelationship($post, 'image', null)
@@ -299,14 +296,14 @@ class MorphOneTest extends TestCase
 
     public function testReplaceRelationshipWithDifferentResource()
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         /** @var Image $existing */
-        $existing = factory(Image::class)->make();
+        $existing = Image::factory()->make();
         $existing->imageable()->associate($post)->save();
 
         /** @var Image $image */
-        $image = factory(Image::class)->create();
+        $image = Image::factory()->create();
 
         $data = ['type' => 'images', 'id' => (string) $image->getRouteKey()];
 

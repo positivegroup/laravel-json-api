@@ -28,7 +28,6 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 class FailedMetaTest extends TestCase
 {
-
     /**
      * @var MockObject|Validators
      */
@@ -161,9 +160,10 @@ class FailedMetaTest extends TestCase
     }
 
     /**
-     * @param array $attributes
-     * @param array $rules
-     * @param array $expected
+     * @param  array  $attributes
+     * @param  array  $rules
+     * @param  array  $expected
+     *
      * @dataProvider rulesProvider
      */
     public function test(array $attributes, array $rules, array $expected): void
@@ -186,7 +186,7 @@ class FailedMetaTest extends TestCase
      */
     public function testUnique(): void
     {
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
 
         $data = [
             'type' => 'posts',

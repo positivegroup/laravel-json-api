@@ -24,12 +24,9 @@ use Illuminate\Support\Facades\Auth;
 
 /**
  * Trait AuthorizesRequests
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 trait AuthorizesRequests
 {
-
     use IlluminateAuthorizesRequests;
 
     /**
@@ -40,11 +37,12 @@ trait AuthorizesRequests
      *
      * @var array
      */
-    protected $guards = ['api'];
+    protected $guards = [null];
 
     /**
      * @param $ability
-     * @param mixed ...$arguments
+     * @param  mixed  ...$arguments
+     *
      * @throws AuthenticationException
      * @throws AuthorizationException
      */
@@ -58,6 +56,7 @@ trait AuthorizesRequests
      * Determine if the user is logged in.
      *
      * @return void
+     *
      * @throws AuthenticationException
      */
     protected function authenticate()
@@ -69,6 +68,7 @@ trait AuthorizesRequests
         foreach ($this->guards as $guard) {
             if (Auth::guard($guard)->check()) {
                 Auth::shouldUse($guard);
+
                 return;
             }
         }

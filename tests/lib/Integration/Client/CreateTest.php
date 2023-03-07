@@ -23,10 +23,9 @@ use Neomerx\JsonApi\Encoder\Parameters\EncodingParameters;
 
 class CreateTest extends TestCase
 {
-
     public function test()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $resource = [
             'type' => 'posts',
@@ -61,7 +60,7 @@ class CreateTest extends TestCase
 
     public function testNullRelation()
     {
-        $post = factory(Post::class)->make(['author_id' => null]);
+        $post = Post::factory()->make(['author_id' => null]);
 
         $resource = [
             'type' => 'posts',
@@ -90,7 +89,7 @@ class CreateTest extends TestCase
     public function testWithCompoundDocumentAndFieldsets()
     {
         $this->mock->append();
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $document = [
             'data' => [
@@ -117,7 +116,7 @@ class CreateTest extends TestCase
                     'attributes' => [
                         'name' => $post->author->name,
                     ],
-                ]
+                ],
             ],
         ];
 
@@ -140,7 +139,7 @@ class CreateTest extends TestCase
     public function testRemovesLinksIfNoId()
     {
         $this->mock->append();
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
         $userId = (string) $post->author->getRouteKey();
 
         $document = [
@@ -185,7 +184,7 @@ class CreateTest extends TestCase
     public function testWithClientIdAndLinks()
     {
         $this->mock->append();
-        $post = factory(Post::class)->create();
+        $post = Post::factory()->create();
         $self = "http://localhost/api/v1/posts/{$post->getRouteKey()}";
 
         $document = [
@@ -231,7 +230,7 @@ class CreateTest extends TestCase
 
     public function testWithParameters()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeResource($post, 201);
         $this->client->createRecord($post, [
@@ -247,7 +246,7 @@ class CreateTest extends TestCase
             'include' => 'author,site',
             'fields[author]' => 'first-name,surname',
             'fields[site]' => 'uri',
-            'foo' => 'bar'
+            'foo' => 'bar',
         ]);
     }
 
@@ -262,7 +261,7 @@ class CreateTest extends TestCase
             ['foo' => 'bar']
         );
 
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeResource($post, 201);
         $this->client->createRecord($post, $parameters);
@@ -271,13 +270,13 @@ class CreateTest extends TestCase
             'include' => 'author,site',
             'fields[author]' => 'first-name,surname',
             'fields[site]' => 'uri',
-            'foo' => 'bar'
+            'foo' => 'bar',
         ]);
     }
 
     public function testWithOptions()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeResource($post, 201);
 
@@ -299,11 +298,10 @@ class CreateTest extends TestCase
 
     public function testError()
     {
-        $post = factory(Post::class)->make();
+        $post = Post::factory()->make();
 
         $this->willSeeErrors([], 405);
         $this->expectException(ClientException::class);
         $this->client->createRecord($post);
     }
-
 }

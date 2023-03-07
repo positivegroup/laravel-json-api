@@ -21,7 +21,6 @@ use DummyApp\Comment;
 
 class QueryParameterValidationTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -33,7 +32,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testCreateRejectsSort()
     {
-        $comment = factory(Comment::class)->states('post')->make();
+        $comment = Comment::factory()->post()->make();
         $data = $this->serialize($comment);
 
         $this->actingAs($comment->user)->doCreate($data, ['sort' => 'created-at'])->assertError(400, [
@@ -47,7 +46,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testCreateRejectsFilter()
     {
-        $comment = factory(Comment::class)->states('post')->make();
+        $comment = Comment::factory()->post()->make();
         $data = $this->serialize($comment);
 
         $this->actingAs($comment->user)->doCreate($data, ['filter' => ['created-by' => '1']])->assertError(400, [
@@ -61,7 +60,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testCreateRejectsPage()
     {
-        $comment = factory(Comment::class)->states('post')->make();
+        $comment = Comment::factory()->post()->make();
         $data = $this->serialize($comment);
 
         $this->actingAs($comment->user)->doCreate($data, ['page' => ['size' => 12]])->assertError(400, [
@@ -75,7 +74,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testReadRejectsSort()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
 
         $this->actingAs($comment->user)->doRead($comment, ['sort' => 'created-at'])->assertError(400, [
             'source' => ['parameter' => 'sort'],
@@ -88,7 +87,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testReadRejectsPage()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
 
         $this->actingAs($comment->user)->doRead($comment, ['page' => ['size' => 12]])->assertError(400, [
             'source' => ['parameter' => 'page'],
@@ -101,7 +100,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testUpdateRejectsSort()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
         $data = $this->serialize($comment);
 
         $this->actingAs($comment->user)->doUpdate($data, ['sort' => 'created-at'])->assertError(400, [
@@ -115,7 +114,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testUpdateRejectsFilter()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
         $data = $this->serialize($comment);
 
         $this->actingAs($comment->user)->doUpdate($data, ['filter' => ['created-by' => '1']])->assertError(400, [
@@ -129,7 +128,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testUpdateRejectsPage()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
         $data = $this->serialize($comment);
 
         $this->actingAs($comment->user)->doUpdate($data, ['page' => ['size' => 12]])->assertError(400, [
@@ -143,7 +142,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testDeleteRejectsSort()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
 
         $this->actingAs($comment->user)->doDelete($comment, ['sort' => 'created-at'])->assertError(400, [
             'source' => ['parameter' => 'sort'],
@@ -156,7 +155,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testDeleteRejectsFilter()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
 
         $this->actingAs($comment->user)->doDelete($comment, ['filter' => ['created-by' => '1']])->assertError(400, [
             'source' => ['parameter' => 'filter'],
@@ -169,7 +168,7 @@ class QueryParameterValidationTest extends TestCase
      */
     public function testDeleteRejectsPage()
     {
-        $comment = factory(Comment::class)->states('post')->create();
+        $comment = Comment::factory()->post()->create();
 
         $this->actingAs($comment->user)->doDelete($comment, ['page' => ['size' => 12]])->assertError(400, [
             'source' => ['parameter' => 'page'],
@@ -177,7 +176,7 @@ class QueryParameterValidationTest extends TestCase
     }
 
     /**
-     * @param Comment $comment
+     * @param  Comment  $comment
      * @return array
      */
     private function serialize(Comment $comment)
