@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 namespace CloudCreativity\LaravelJsonApi\Tests\Unit\Utils;
 
 use CloudCreativity\LaravelJsonApi\Utils\Arr;
@@ -21,7 +22,6 @@ use PHPUnit\Framework\TestCase;
 
 class ArrTest extends TestCase
 {
-
     public function testCamelize()
     {
         $actual = Arr::camelize([
@@ -129,7 +129,7 @@ class ArrTest extends TestCase
     /**
      * @return array
      */
-    public function methodsProvider()
+    public static function methodsProvider()
     {
         return [
             ['camelize'],
@@ -142,12 +142,11 @@ class ArrTest extends TestCase
     /**
      * Test that the conversion methods accept null as a value.
      *
-     * @param $method
      * @dataProvider methodsProvider
      */
     public function testNull($method)
     {
-        $actual = call_user_func(Arr::class . "::{$method}", null);
+        $actual = call_user_func(Arr::class."::{$method}", null);
 
         $this->assertSame([], $actual);
     }

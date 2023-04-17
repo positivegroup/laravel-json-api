@@ -23,16 +23,13 @@ use CloudCreativity\LaravelJsonApi\Utils\Str;
 
 /**
  * Class StrTest
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class StrTest extends TestCase
 {
-
     /**
      * @return array
      */
-    public function dasherizeProvider()
+    public static function dasherizeProvider()
     {
         return [
             ['foo', 'foo'],
@@ -43,8 +40,6 @@ class StrTest extends TestCase
     }
 
     /**
-     * @param $value
-     * @param $expected
      * @dataProvider dasherizeProvider
      */
     public function testDasherize($value, $expected)
@@ -55,7 +50,7 @@ class StrTest extends TestCase
     /**
      * @return array
      */
-    public function decamelizeProvider()
+    public static function decamelizeProvider()
     {
         return [
             ['foo', 'foo'],
@@ -66,8 +61,6 @@ class StrTest extends TestCase
     }
 
     /**
-     * @param $value
-     * @param $expected
      * @dataProvider decamelizeProvider
      */
     public function testDecamelize($value, $expected)
@@ -78,7 +71,7 @@ class StrTest extends TestCase
     /**
      * @return array
      */
-    public function underscoreProvider()
+    public static function underscoreProvider()
     {
         return [
             ['foo', 'foo'],
@@ -91,8 +84,6 @@ class StrTest extends TestCase
     }
 
     /**
-     * @param $value
-     * @param $expected
      * @dataProvider underscoreProvider
      */
     public function testUnderscore($value, $expected)
@@ -103,7 +94,7 @@ class StrTest extends TestCase
     /**
      * @return array
      */
-    public function camelizeProvider()
+    public static function camelizeProvider()
     {
         return [
             ['foo', 'foo'],
@@ -115,8 +106,6 @@ class StrTest extends TestCase
     }
 
     /**
-     * @param $value
-     * @param $expected
      * @dataProvider camelizeProvider
      */
     public function testCamelizeAndClassify($value, $expected)

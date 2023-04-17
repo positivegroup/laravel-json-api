@@ -26,12 +26,9 @@ use stdClass;
 
 /**
  * Class ResourceIdentifierTest
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class ResourceIdentifierTest extends TestCase
 {
-
     public function testTypeAndId()
     {
         $identifier = new ResourceIdentifier();
@@ -102,7 +99,7 @@ class ResourceIdentifierTest extends TestCase
     /**
      * @return array
      */
-    public function invalidTypeProvider()
+    public static function invalidTypeProvider()
     {
         return [
             'null' => [null],
@@ -114,7 +111,6 @@ class ResourceIdentifierTest extends TestCase
     }
 
     /**
-     * @param $type
      * @dataProvider invalidTypeProvider
      */
     public function testInvalidType($type)
@@ -126,7 +122,7 @@ class ResourceIdentifierTest extends TestCase
     /**
      * @return array
      */
-    public function invalidIdProvider()
+    public static function invalidIdProvider()
     {
         return [
             'null' => [null],
@@ -138,7 +134,6 @@ class ResourceIdentifierTest extends TestCase
     }
 
     /**
-     * @param $id
      * @dataProvider invalidIdProvider
      */
     public function testInvalidId($id)

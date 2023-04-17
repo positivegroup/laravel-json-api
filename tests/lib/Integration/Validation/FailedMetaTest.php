@@ -33,9 +33,6 @@ class FailedMetaTest extends TestCase
      */
     private $validator;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -44,26 +41,20 @@ class FailedMetaTest extends TestCase
 
         $this->validator = $this
             ->getMockBuilder(Validators::class)
-            ->setMethods(['rules'])
+            ->onlyMethods(['rules'])
             ->setConstructorArgs([$this->app->make(Factory::class), json_api('v1')->getContainer()])
             ->getMock();
 
         $this->app->instance(Validators::class, $this->validator);
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
         LaravelJsonApi::$validationFailures = false;
     }
 
-    /**
-     * @return array
-     */
-    public function rulesProvider(): array
+    public static function rulesProvider(): array
     {
         return [
             'before_or_equal' => [
@@ -72,7 +63,7 @@ class FailedMetaTest extends TestCase
                 [
                     'status' => '422',
                     'title' => 'Unprocessable Entity',
-                    'detail' => 'The value must be a date before or equal to 2018-12-31 23:59:59.',
+                    'detail' => 'The value field must be a date before or equal to 2018-12-31 23:59:59.',
                     'meta' => [
                         'failed' => [
                             'rule' => 'before-or-equal',
@@ -92,7 +83,7 @@ class FailedMetaTest extends TestCase
                 [
                     'status' => '422',
                     'title' => 'Unprocessable Entity',
-                    'detail' => 'The value must be between 1 and 9.',
+                    'detail' => 'The value field must be between 1 and 9.',
                     'meta' => [
                         'failed' => [
                             'rule' => 'between',
@@ -160,10 +151,6 @@ class FailedMetaTest extends TestCase
     }
 
     /**
-     * @param  array  $attributes
-     * @param  array  $rules
-     * @param  array  $expected
-     *
      * @dataProvider rulesProvider
      */
     public function test(array $attributes, array $rules, array $expected): void
@@ -224,7 +211,7 @@ class FailedMetaTest extends TestCase
             [
                 'status' => '422',
                 'title' => 'Unprocessable Entity',
-                'detail' => 'The title must be a string.',
+                'detail' => 'The title field must be a string.',
                 'source' => [
                     'pointer' => '/data/attributes/title',
                 ],
@@ -237,7 +224,7 @@ class FailedMetaTest extends TestCase
             [
                 'status' => '422',
                 'title' => 'Unprocessable Entity',
-                'detail' => 'The title must be between 5 and 255 characters.',
+                'detail' => 'The title field must be between 5 and 255 characters.',
                 'source' => [
                     'pointer' => '/data/attributes/title',
                 ],

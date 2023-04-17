@@ -69,10 +69,7 @@ class HasOneTest extends TestCase
         $this->assertNull($refreshed->phone);
     }
 
-    /**
-     * @return array
-     */
-    public function confirmationProvider(): array
+    public static function confirmationProvider(): array
     {
         return [
             ['password-confirmation', 'foo'],
@@ -82,9 +79,6 @@ class HasOneTest extends TestCase
     }
 
     /**
-     * @param  string  $field
-     * @param $value
-     *
      * @dataProvider confirmationProvider
      *
      * @see https://github.com/cloudcreativity/laravel-json-api/issues/262

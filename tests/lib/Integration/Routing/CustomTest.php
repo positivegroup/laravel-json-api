@@ -36,9 +36,6 @@ class CustomTest extends TestCase
      */
     protected $appRoutes = false;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -59,10 +56,7 @@ class CustomTest extends TestCase
         });
     }
 
-    /**
-     * @return array
-     */
-    public function versionProvider(): array
+    public static function versionProvider(): array
     {
         return [
             'root' => ['/api/v1'],
@@ -71,8 +65,6 @@ class CustomTest extends TestCase
     }
 
     /**
-     * @param  string  $uri
-     *
      * @dataProvider versionProvider
      */
     public function testVersion(string $uri): void
@@ -83,8 +75,6 @@ class CustomTest extends TestCase
     }
 
     /**
-     * @param  string  $uri
-     *
      * @dataProvider versionProvider
      */
     public function testVersionContentIsNegotiated(string $uri): void

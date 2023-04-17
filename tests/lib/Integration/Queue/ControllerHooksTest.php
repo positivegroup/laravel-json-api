@@ -34,9 +34,6 @@ class ControllerHooksTest extends TestCase
      */
     protected $resourceType = 'downloads';
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -46,7 +43,7 @@ class ControllerHooksTest extends TestCase
         $mock = $this
             ->getMockBuilder(Adapter::class)
             ->setConstructorArgs([new StandardStrategy()])
-            ->setMethods(['create', 'update', 'delete'])
+            ->onlyMethods(['create', 'update', 'delete'])
             ->getMock();
 
         $mock->expects($this->never())->method('create');
@@ -111,9 +108,6 @@ class ControllerHooksTest extends TestCase
         $this->assertTrue($job->wasClientDispatched(), 'was client dispatched.');
     }
 
-    /**
-     * @return CreateDownload
-     */
     private function assertDispatchedCreate(): CreateDownload
     {
         $actual = null;
@@ -127,9 +121,6 @@ class ControllerHooksTest extends TestCase
         return $actual;
     }
 
-    /**
-     * @return ReplaceDownload
-     */
     private function assertDispatchedReplace(): ReplaceDownload
     {
         $actual = null;
@@ -143,9 +134,6 @@ class ControllerHooksTest extends TestCase
         return $actual;
     }
 
-    /**
-     * @return DeleteDownload
-     */
     private function assertDispatchedDelete(): DeleteDownload
     {
         $actual = null;

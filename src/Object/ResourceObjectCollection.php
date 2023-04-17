@@ -24,23 +24,21 @@ use CloudCreativity\LaravelJsonApi\Contracts\Object\ResourceObjectCollectionInte
 use CloudCreativity\LaravelJsonApi\Contracts\Object\ResourceObjectInterface;
 use CloudCreativity\LaravelJsonApi\Exceptions\InvalidArgumentException;
 use CloudCreativity\LaravelJsonApi\Exceptions\RuntimeException;
+use Traversable;
 
 /**
  * Class ResourceCollection
  *
- * @package CloudCreativity\LaravelJsonApi
  * @deprecated 2.0.0
  */
 class ResourceObjectCollection implements ResourceObjectCollectionInterface
 {
-
     /**
      * @var ResourceObjectInterface[]
      */
     private $stack = [];
 
     /**
-     * @param array $resources
      * @return ResourceObjectCollection
      */
     public static function create(array $resources)
@@ -54,8 +52,6 @@ class ResourceObjectCollection implements ResourceObjectCollectionInterface
 
     /**
      * ResourceCollection constructor.
-     *
-     * @param array $resources
      */
     public function __construct(array $resources = [])
     {
@@ -63,21 +59,20 @@ class ResourceObjectCollection implements ResourceObjectCollectionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->stack);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function has(ResourceIdentifierInterface $identifier)
     {
         /** @var ResourceObjectInterface $resource */
         foreach ($this as $resource) {
-
             if ($identifier->isSame($resource->getIdentifier())) {
                 return true;
             }
@@ -87,23 +82,22 @@ class ResourceObjectCollection implements ResourceObjectCollectionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function get(ResourceIdentifierInterface $identifier)
     {
         /** @var ResourceObjectInterface $resource */
         foreach ($this as $resource) {
-
             if ($identifier->isSame($resource->getIdentifier())) {
                 return $resource;
             }
         }
 
-        throw new RuntimeException('No matching resource in collection: ' . $identifier->toString());
+        throw new RuntimeException('No matching resource in collection: '.$identifier->toString());
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getAll()
     {
@@ -111,7 +105,7 @@ class ResourceObjectCollection implements ResourceObjectCollectionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getIdentifiers()
     {
@@ -126,7 +120,7 @@ class ResourceObjectCollection implements ResourceObjectCollectionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function isEmpty()
     {
@@ -134,20 +128,19 @@ class ResourceObjectCollection implements ResourceObjectCollectionInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->stack);
     }
 
     /**
-     * @param ResourceObjectInterface $resource
      * @return $this
      */
     public function add(ResourceObjectInterface $resource)
     {
-        if (!$this->has($resource->getIdentifier())) {
+        if (! $this->has($resource->getIdentifier())) {
             $this->stack[] = $resource;
         }
 
@@ -155,14 +148,12 @@ class ResourceObjectCollection implements ResourceObjectCollectionInterface
     }
 
     /**
-     * @param array $resources
      * @return $this
      */
     public function addMany(array $resources)
     {
         foreach ($resources as $resource) {
-
-            if (!$resource instanceof ResourceObjectInterface) {
+            if (! $resource instanceof ResourceObjectInterface) {
                 throw new InvalidArgumentException('Expecting only resource objects.');
             }
 

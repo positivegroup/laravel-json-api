@@ -18,6 +18,8 @@
 namespace CloudCreativity\LaravelJsonApi\Tests\Unit;
 
 use CloudCreativity\LaravelJsonApi\Exceptions\InvalidJsonException;
+use function CloudCreativity\LaravelJsonApi\http_contains_body;
+use function CloudCreativity\LaravelJsonApi\json_decode;
 use CloudCreativity\LaravelJsonApi\Utils\Helpers;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -26,16 +28,13 @@ use Illuminate\Http\Response as IlluminateResponse;
 use Neomerx\JsonApi\Document\Error;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use function CloudCreativity\LaravelJsonApi\http_contains_body;
-use function CloudCreativity\LaravelJsonApi\json_decode;
 
 class HelpersTest extends TestCase
 {
-
     /**
      * @return array
      */
-    public function invalidJsonProvider()
+    public static function invalidJsonProvider()
     {
         return [
             'parse error' => ['{ "data": { "type": "foo" }', true],
@@ -48,8 +47,8 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param $content
-     * @param bool $jsonError
+     * @param  bool  $jsonError
+     *
      * @dataProvider invalidJsonProvider
      */
     public function testInvalidJson($content, $jsonError = false)
@@ -72,7 +71,7 @@ class HelpersTest extends TestCase
     /**
      * @return array
      */
-    public function requestContainsBodyProvider()
+    public static function requestContainsBodyProvider()
     {
         return [
             'neither header' => [[], false],
@@ -86,8 +85,6 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param array $headers
-     * @param $expected
      * @dataProvider requestContainsBodyProvider
      */
     public function testRequestContainsBody(array $headers, $expected)
@@ -98,8 +95,6 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param array $headers
-     * @param $expected
      * @dataProvider requestContainsBodyProvider
      */
     public function testIlluminateRequestContainsBody(array $headers, $expected)
@@ -114,8 +109,6 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param array $headers
-     * @param $expected
      * @dataProvider requestContainsBodyProvider
      */
     public function testSymfonyRequestContainsBody(array $headers, $expected)
@@ -132,7 +125,7 @@ class HelpersTest extends TestCase
     /**
      * @return array
      */
-    public function responseContainsBodyProvider()
+    public static function responseContainsBodyProvider()
     {
         return [
             'head never contains body' => [false, 'HEAD', 200],
@@ -147,11 +140,8 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param $expected
-     * @param $method
-     * @param $status
-     * @param array $headers
-     * @param $body
+     * @param  array  $headers
+     *
      * @dataProvider responseContainsBodyProvider
      */
     public function testResponseContainsBody($expected, $method, $status, $headers = [], $body = null)
@@ -163,11 +153,8 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param $expected
-     * @param $method
-     * @param $status
-     * @param array $headers
-     * @param $body
+     * @param  array  $headers
+     *
      * @dataProvider responseContainsBodyProvider
      */
     public function testIlluminateResponseContainsBody($expected, $method, $status, $headers = [], $body = null)
@@ -179,11 +166,8 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param $expected
-     * @param $method
-     * @param $status
-     * @param array $headers
-     * @param $body
+     * @param  array  $headers
+     *
      * @dataProvider responseContainsBodyProvider
      */
     public function testSymfonyResponseContainsBody($expected, $method, $status, $headers = [], $body = null)
@@ -197,7 +181,7 @@ class HelpersTest extends TestCase
     /**
      * @return array
      */
-    public function mediaTypesProvider()
+    public static function mediaTypesProvider()
     {
         return [
             ['application/vnd.api+json', true],
@@ -207,8 +191,6 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param $accept
-     * @param $expected
      * @dataProvider mediaTypesProvider
      */
     public function testWantsJsonApi($accept, $expected)
@@ -220,8 +202,6 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param $contentType
-     * @param $expected
      * @dataProvider mediaTypesProvider
      */
     public function testIsJsonApi($contentType, $expected)
@@ -232,10 +212,7 @@ class HelpersTest extends TestCase
         $this->assertSame($expected, Helpers::isJsonApi($request));
     }
 
-    /**
-     * @return array
-     */
-    public function httpErrorProvider(): array
+    public static function httpErrorProvider(): array
     {
         return [
             'empty' => [
@@ -282,8 +259,6 @@ class HelpersTest extends TestCase
     }
 
     /**
-     * @param array $errors
-     * @param int $expected
      * @dataProvider httpErrorProvider
      */
     public function testHttpErrorStatus(array $errors, int $expected): void
@@ -295,9 +270,6 @@ class HelpersTest extends TestCase
         $this->assertSame(Helpers::httpErrorStatus($errors), $expected);
     }
 
-    /**
-     * @param InvalidJsonException $ex
-     */
     private function assertJsonError(InvalidJsonException $ex)
     {
         $this->assertEquals(json_last_error(), $ex->getJsonError());

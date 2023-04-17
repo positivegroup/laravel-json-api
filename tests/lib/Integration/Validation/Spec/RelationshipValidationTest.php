@@ -29,7 +29,7 @@ class RelationshipValidationTest extends TestCase
     /**
      * @return array
      */
-    public function toOneProvider()
+    public static function toOneProvider()
     {
         return [
             'data:required' => [
@@ -216,7 +216,7 @@ class RelationshipValidationTest extends TestCase
     /**
      * @return array
      */
-    public function toManyProvider()
+    public static function toManyProvider()
     {
         return [
             'data:required' => [
@@ -368,9 +368,6 @@ class RelationshipValidationTest extends TestCase
     }
 
     /**
-     * @param $data
-     * @param  array  $error
-     *
      * @dataProvider toOneProvider
      */
     public function testToOne($data, array $error)
@@ -383,9 +380,6 @@ class RelationshipValidationTest extends TestCase
     }
 
     /**
-     * @param $data
-     * @param  array  $error
-     *
      * @dataProvider toManyProvider
      */
     public function testToMany($data, array $error)

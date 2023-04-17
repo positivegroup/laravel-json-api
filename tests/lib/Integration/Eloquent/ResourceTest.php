@@ -32,18 +32,12 @@ class ResourceTest extends TestCase
      */
     protected $resourceType = 'posts';
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
         Carbon::setTestNow('2018-12-01 12:00:00');
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -210,7 +204,7 @@ class ResourceTest extends TestCase
             [
                 'status' => '422',
                 'title' => 'Unprocessable Entity',
-                'detail' => 'The title must be a string.',
+                'detail' => 'The title field must be a string.',
                 'source' => [
                     'pointer' => '/data/attributes/title',
                 ],
@@ -218,7 +212,7 @@ class ResourceTest extends TestCase
             [
                 'status' => '422',
                 'title' => 'Unprocessable Entity',
-                'detail' => 'The title must be between 5 and 255 characters.',
+                'detail' => 'The title field must be between 5 and 255 characters.',
                 'source' => [
                     'pointer' => '/data/attributes/title',
                 ],
@@ -749,7 +743,6 @@ class ResourceTest extends TestCase
     /**
      * Get the posts resource that we expect in server responses.
      *
-     * @param  Post  $post
      * @return array
      */
     private function serialize(Post $post)

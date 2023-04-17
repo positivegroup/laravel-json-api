@@ -22,11 +22,7 @@ use PHPUnit\Framework\TestCase;
 
 class AllowedFieldSetsTest extends TestCase
 {
-
-    /**
-     * @return array
-     */
-    public function allowedProvider(): array
+    public static function allowedProvider(): array
     {
         return [
             'valid' => [
@@ -45,8 +41,6 @@ class AllowedFieldSetsTest extends TestCase
     }
 
     /**
-     * @param array $fields
-     * @param bool $expected
      * @dataProvider allowedProvider
      */
     public function test(array $fields, bool $expected)
@@ -62,8 +56,6 @@ class AllowedFieldSetsTest extends TestCase
     }
 
     /**
-     * @param array $fields
-     * @param bool $expected
      * @dataProvider allowedProvider
      */
     public function testWithMethods(array $fields, bool $expected)
@@ -86,5 +78,4 @@ class AllowedFieldSetsTest extends TestCase
             'users' => 'name,email',
         ]));
     }
-
 }

@@ -25,12 +25,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class ErrorBagTest
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class ErrorBagTest extends TestCase
 {
-
     public function testIteration()
     {
         $bag = ErrorBag::create(new MessageBag([
@@ -124,7 +121,7 @@ class ErrorBagTest extends TestCase
     /**
      * @return array
      */
-    public function mappedPointersProvider()
+    public static function mappedPointersProvider()
     {
         return [
             ['category', ['foo' => 'bar'], '/category'],
@@ -138,9 +135,6 @@ class ErrorBagTest extends TestCase
     }
 
     /**
-     * @param $key
-     * @param $mapping
-     * @param $expected
      * @dataProvider mappedPointersProvider
      */
     public function testSourcePointerMapsKeys($key, $mapping, $expected)

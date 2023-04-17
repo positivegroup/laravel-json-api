@@ -25,7 +25,6 @@ use Illuminate\Support\Facades\Route;
 
 class AuthTest extends TestCase
 {
-
     /**
      * @var bool
      */
@@ -65,7 +64,7 @@ class AuthTest extends TestCase
     /**
      * @return array
      */
-    public function resourceAuthProvider()
+    public static function resourceAuthProvider()
     {
         return [
             [false, 'posts', 200],
@@ -76,9 +75,6 @@ class AuthTest extends TestCase
     }
 
     /**
-     * @param $authenticated
-     * @param $resourceType
-     * @param $expected
      * @dataProvider resourceAuthProvider
      */
     public function testResourceAuth($authenticated, $resourceType, $expected)
@@ -150,5 +146,4 @@ class AuthTest extends TestCase
 
         return $this;
     }
-
 }

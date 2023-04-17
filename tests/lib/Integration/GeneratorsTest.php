@@ -22,7 +22,6 @@ use Illuminate\Filesystem\Filesystem;
 
 class GeneratorsTest extends TestCase
 {
-
     /**
      * @var string
      */
@@ -43,9 +42,6 @@ class GeneratorsTest extends TestCase
      */
     private $withoutType = false;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -55,13 +51,10 @@ class GeneratorsTest extends TestCase
             $this->withoutMockingConsoleOutput();
         }
 
-        $this->app->setBasePath($this->path = __DIR__ . '/../../dummy');
+        $this->app->setBasePath($this->path = __DIR__.'/../../dummy');
         $this->files = new Filesystem();
     }
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -98,7 +91,7 @@ class GeneratorsTest extends TestCase
     /**
      * @return array
      */
-    public function byResourceProvider()
+    public static function byResourceProvider()
     {
         return [
             'by-resource' => [true],
@@ -118,7 +111,7 @@ class GeneratorsTest extends TestCase
 
         $this->assertSame(0, $result);
         $this->assertFileEquals(
-            __DIR__ . '/../../../stubs/api.php',
+            __DIR__.'/../../../stubs/api.php',
             "{$this->path}/config/json-api-default.php"
         );
     }
@@ -132,7 +125,7 @@ class GeneratorsTest extends TestCase
 
         $this->assertSame(0, $result);
         $this->assertFileEquals(
-            __DIR__ . '/../../../stubs/api.php',
+            __DIR__.'/../../../stubs/api.php',
             "{$this->path}/config/json-api-foo.php"
         );
     }
@@ -236,8 +229,9 @@ class GeneratorsTest extends TestCase
     /**
      * Test generating a reusable authorizer.
      *
-     * @param bool $byResource
-     * @param bool $withoutType
+     * @param  bool  $byResource
+     * @param  bool  $withoutType
+     *
      * @dataProvider byResourceProvider
      */
     public function testReusableAuthorizer($byResource, $withoutType = false)
@@ -255,8 +249,6 @@ class GeneratorsTest extends TestCase
     /**
      * Test generating a resource-specific authorizer.
      *
-     * @param $byResource
-     * @param $withoutType
      * @dataProvider byResourceProvider
      */
     public function testResourceAuthorizer($byResource, $withoutType = false)
@@ -275,8 +267,6 @@ class GeneratorsTest extends TestCase
     /**
      * Test generating a resource with an authorizer.
      *
-     * @param $byResource
-     * @param $withoutType
      * @dataProvider byResourceProvider
      */
     public function testResourceWithAuthorizer($byResource, $withoutType = false)
@@ -295,8 +285,9 @@ class GeneratorsTest extends TestCase
     /**
      * Test generating a reusable content negotiator.
      *
-     * @param bool $byResource
-     * @param bool $withoutType
+     * @param  bool  $byResource
+     * @param  bool  $withoutType
+     *
      * @dataProvider byResourceProvider
      */
     public function testReusableContentNegotiator($byResource, $withoutType = false)
@@ -314,8 +305,6 @@ class GeneratorsTest extends TestCase
     /**
      * Test generating a resource-specific content negotiator.
      *
-     * @param $byResource
-     * @param $withoutType
      * @dataProvider byResourceProvider
      */
     public function testResourceContentNegotiator($byResource, $withoutType = false)
@@ -334,8 +323,6 @@ class GeneratorsTest extends TestCase
     /**
      * Test generating a resource with an content negotiator.
      *
-     * @param $byResource
-     * @param $withoutType
      * @dataProvider byResourceProvider
      */
     public function testResourceWithContentNegotiator($byResource, $withoutType = false)
@@ -373,13 +360,13 @@ class GeneratorsTest extends TestCase
     }
 
     /**
-     * @param bool $bool
-     * @param bool $withoutType
+     * @param  bool  $bool
+     * @param  bool  $withoutType
      * @return $this
      */
     private function byResource($bool, $withoutType = false)
     {
-        if (!$bool) {
+        if (! $bool) {
             $this->notByResource($withoutType);
         }
 
@@ -387,7 +374,7 @@ class GeneratorsTest extends TestCase
     }
 
     /**
-     * @param bool $withoutType
+     * @param  bool  $withoutType
      * @return $this
      */
     private function notByResource($withoutType = false)
@@ -561,7 +548,6 @@ class GeneratorsTest extends TestCase
                 "{$this->path}/app/JsonApi/Authorizers/VisitorAuthorizer.php";
         }
 
-
         $this->assertFileExists($file);
         $content = $this->files->get($file);
 
@@ -586,7 +572,6 @@ class GeneratorsTest extends TestCase
                 "{$this->path}/app/JsonApi/Companies/Authorizer.php" :
                 "{$this->path}/app/JsonApi/Authorizers/CompanyAuthorizer.php";
         }
-
 
         $this->assertFileExists($file);
         $content = $this->files->get($file);
@@ -616,7 +601,6 @@ class GeneratorsTest extends TestCase
                 "{$this->path}/app/JsonApi/ContentNegotiators/{$class}.php";
         }
 
-
         $this->assertFileExists($file);
         $content = $this->files->get($file);
 
@@ -642,7 +626,6 @@ class GeneratorsTest extends TestCase
                 "{$this->path}/app/JsonApi/ContentNegotiators/CompanyContentNegotiator.php";
         }
 
-
         $this->assertFileExists($file);
         $content = $this->files->get($file);
 
@@ -657,9 +640,9 @@ class GeneratorsTest extends TestCase
     }
 
     /**
-     * @param string $expected
-     * @param string $content
-     * @param string $message
+     * @param  string  $expected
+     * @param  string  $content
+     * @param  string  $message
      */
     private function assertContentContains($expected, $content, $message = '')
     {
@@ -671,9 +654,9 @@ class GeneratorsTest extends TestCase
     }
 
     /**
-     * @param string $expected
-     * @param string $content
-     * @param string $message
+     * @param  string  $expected
+     * @param  string  $content
+     * @param  string  $message
      */
     private function assertContentNotContains($expected, $content, $message = '')
     {

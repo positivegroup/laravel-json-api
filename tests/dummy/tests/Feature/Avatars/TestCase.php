@@ -24,25 +24,18 @@ use Illuminate\Support\Facades\Storage;
 
 abstract class TestCase extends BaseTestCase
 {
-
     /**
      * @var string
      */
     protected $resourceType = 'avatars';
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
         Storage::fake('local');
     }
 
-    /**
-     * @return array
-     */
-    public function fieldProvider(): array
+    public static function fieldProvider(): array
     {
         return [
             'created-at' => ['created-at'],
@@ -52,10 +45,7 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function multipartProvider(): array
+    public static function multipartProvider(): array
     {
         return [
             'form-data' => ['multipart/form-data'],
@@ -65,13 +55,10 @@ abstract class TestCase extends BaseTestCase
 
     /**
      * Get the expected JSON API resource for the avatar model.
-     *
-     * @param Avatar $avatar
-     * @return ResourceObject
      */
     protected function serialize(Avatar $avatar): ResourceObject
     {
-        $self = url("/api/v1/avatars", $avatar);
+        $self = url('/api/v1/avatars', $avatar);
 
         return ResourceObject::create([
             'type' => 'avatars',

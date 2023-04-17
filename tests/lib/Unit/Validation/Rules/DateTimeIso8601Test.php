@@ -23,25 +23,18 @@ use CloudCreativity\LaravelJsonApi\Tests\Unit\TestCase;
 
 class DateTimeIso8601Test extends TestCase
 {
-
     /**
      * @var DateTimeIso8601
      */
     private $rule;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
         $this->rule = new DateTimeIso8601();
     }
 
-    /**
-     * @return array
-     */
-    public function validProvider(): array
+    public static function validProvider(): array
     {
         return [
             ['2018-01-01T12:00+00:00'],
@@ -59,10 +52,7 @@ class DateTimeIso8601Test extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function invalidProvider(): array
+    public static function invalidProvider(): array
     {
         return [
             [null],
@@ -81,7 +71,6 @@ class DateTimeIso8601Test extends TestCase
     }
 
     /**
-     * @param $value
      * @dataProvider validProvider
      */
     public function testValid($value): void
@@ -90,7 +79,6 @@ class DateTimeIso8601Test extends TestCase
     }
 
     /**
-     * @param $value
      * @dataProvider invalidProvider
      */
     public function testInvalid($value): void
@@ -99,7 +87,6 @@ class DateTimeIso8601Test extends TestCase
     }
 
     /**
-     * @param string $value
      * @dataProvider validProvider
      */
     public function testValidValuesCanBeDates(string $value): void

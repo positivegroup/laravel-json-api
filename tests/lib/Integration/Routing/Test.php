@@ -30,7 +30,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Test extends TestCase
 {
-
     /**
      * @var bool
      */
@@ -39,7 +38,7 @@ class Test extends TestCase
     /**
      * @var array
      */
-    private $defaults = [
+    private static $defaults = [
         'index' => ['GET', '/api/v1/posts', '@index'],
         'create' => ['POST', '/api/v1/posts', '@create'],
         'read' => ['GET', '/api/v1/posts/1', '@read'],
@@ -58,9 +57,9 @@ class Test extends TestCase
     /**
      * @return array
      */
-    public function defaultsProvider()
+    public static function defaultsProvider()
     {
-        return $this->defaults;
+        return static::$defaults;
     }
 
     /**
@@ -68,18 +67,15 @@ class Test extends TestCase
      *
      * @return array
      */
-    public function recordProvider()
+    public static function recordProvider()
     {
-        $args = $this->defaults;
+        $args = static::$defaults;
         unset($args['index'], $args['create']);
 
         return $args;
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $action
      * @dataProvider defaultsProvider
      */
     public function testDefaults($method, $url, $action)
@@ -91,13 +87,10 @@ class Test extends TestCase
             ]);
         });
 
-        $this->assertMatch($method, $url, '\\' . JsonApiController::class . $action);
+        $this->assertMatch($method, $url, '\\'.JsonApiController::class.$action);
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $action
      * @dataProvider defaultsProvider
      */
     public function testFluentDefaults($method, $url, $action)
@@ -110,13 +103,10 @@ class Test extends TestCase
             });
         });
 
-        $this->assertMatch($method, $url, '\\' . JsonApiController::class . $action);
+        $this->assertMatch($method, $url, '\\'.JsonApiController::class.$action);
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $action
      * @dataProvider defaultsProvider
      */
     public function testControllerIsTrue($method, $url, $action)
@@ -131,13 +121,10 @@ class Test extends TestCase
 
         $expected = 'DummyApp\Http\Controllers\PostsController';
 
-        $this->assertMatch($method, $url, $expected . $action);
+        $this->assertMatch($method, $url, $expected.$action);
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $action
      * @dataProvider defaultsProvider
      */
     public function testFluentControllerIsTrue($method, $url, $action)
@@ -152,13 +139,10 @@ class Test extends TestCase
 
         $expected = 'DummyApp\Http\Controllers\PostsController';
 
-        $this->assertMatch($method, $url, $expected . $action);
+        $this->assertMatch($method, $url, $expected.$action);
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $action
      * @dataProvider defaultsProvider
      */
     public function testFluentControllerIsTrueAndSingular($method, $url, $action)
@@ -173,13 +157,10 @@ class Test extends TestCase
 
         $expected = 'DummyApp\Http\Controllers\PostController';
 
-        $this->assertMatch($method, $url, $expected . $action);
+        $this->assertMatch($method, $url, $expected.$action);
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $action
      * @dataProvider defaultsProvider
      */
     public function testControllerIsString($method, $url, $action)
@@ -194,13 +175,10 @@ class Test extends TestCase
             ]);
         });
 
-        $this->assertMatch($method, $url, $expected . $action);
+        $this->assertMatch($method, $url, $expected.$action);
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $action
      * @dataProvider defaultsProvider
      */
     public function testFluentControllerIsString($method, $url, $action)
@@ -215,13 +193,13 @@ class Test extends TestCase
             });
         });
 
-        $this->assertMatch($method, $url, $expected . $action);
+        $this->assertMatch($method, $url, $expected.$action);
     }
 
     /**
      * @return array
      */
-    public function onlyProvider()
+    public static function onlyProvider()
     {
         return [
             ['index', [
@@ -249,8 +227,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $only
-     * @param array $matches
      * @dataProvider onlyProvider
      */
     public function testOnly($only, array $matches)
@@ -263,8 +239,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $only
-     * @param array $matches
      * @dataProvider onlyProvider
      */
     public function testFluentOnly($only, array $matches)
@@ -281,7 +255,7 @@ class Test extends TestCase
     /**
      * @return array
      */
-    public function exceptProvider()
+    public static function exceptProvider()
     {
         return [
             ['create', [
@@ -309,8 +283,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $except
-     * @param array $matches
      * @dataProvider exceptProvider
      */
     public function testExcept($except, array $matches)
@@ -323,8 +295,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $except
-     * @param array $matches
      * @dataProvider exceptProvider
      */
     public function testFluentExcept($except, array $matches)
@@ -341,7 +311,7 @@ class Test extends TestCase
     /**
      * @return array
      */
-    public function hasOneOnlyProvider()
+    public static function hasOneOnlyProvider()
     {
         return [
             ['related', [
@@ -363,8 +333,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $only
-     * @param array $matches
      * @dataProvider hasOneOnlyProvider
      */
     public function testHasOneOnly($only, array $matches)
@@ -383,8 +351,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $only
-     * @param array $matches
      * @dataProvider hasOneOnlyProvider
      */
     public function testFluentHasOneOnly($only, array $matches)
@@ -403,7 +369,7 @@ class Test extends TestCase
     /**
      * @return array
      */
-    public function hasOneExceptProvider()
+    public static function hasOneExceptProvider()
     {
         return [
             ['related', [
@@ -425,8 +391,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $except
-     * @param array $matches
      * @dataProvider hasOneExceptProvider
      */
     public function testHasOneExcept($except, array $matches)
@@ -445,8 +409,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $except
-     * @param array $matches
      * @dataProvider hasOneExceptProvider
      */
     public function testFluentHasOneExcept($except, array $matches)
@@ -501,7 +463,7 @@ class Test extends TestCase
     /**
      * @return array
      */
-    public function hasManyOnlyProvider()
+    public static function hasManyOnlyProvider()
     {
         return [
             ['related', [
@@ -536,8 +498,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $only
-     * @param array $matches
      * @dataProvider hasManyOnlyProvider
      */
     public function testHasManyOnly($only, array $matches)
@@ -556,8 +516,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $only
-     * @param array $matches
      * @dataProvider hasManyOnlyProvider
      */
     public function testFluentHasManyOnly($only, array $matches)
@@ -576,7 +534,7 @@ class Test extends TestCase
     /**
      * @return array
      */
-    public function hasManyExceptProvider()
+    public static function hasManyExceptProvider()
     {
         return [
             ['related', [
@@ -611,8 +569,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $except
-     * @param array $matches
      * @dataProvider hasManyExceptProvider
      */
     public function testHasManyExcept($except, array $matches)
@@ -631,8 +587,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $except
-     * @param array $matches
      * @dataProvider hasManyExceptProvider
      */
     public function testFluentHasManyExcept($except, array $matches)
@@ -647,7 +601,6 @@ class Test extends TestCase
 
         $this->assertRoutes($matches);
     }
-
 
     public function testHasManyInverse(): void
     {
@@ -686,8 +639,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testResourceIdConstraint($method, $url)
@@ -704,8 +655,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testFluentResourceIdConstraint($method, $url)
@@ -722,8 +671,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testDefaultIdConstraint($method, $url)
@@ -739,8 +686,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testFluentDefaultIdConstraint($method, $url)
@@ -759,8 +704,6 @@ class Test extends TestCase
     /**
      * If there is a default ID constraint, it can be removed using `null` on a resource.
      *
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testDefaultIdConstraintCanBeIgnoredByResource($method, $url)
@@ -779,8 +722,6 @@ class Test extends TestCase
     /**
      * If there is a default ID constraint, it can be removed using `null` on a resource.
      *
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testFluentDefaultIdConstraintCanBeIgnoredByResource($method, $url)
@@ -799,8 +740,6 @@ class Test extends TestCase
     /**
      * If there is a default and a resource ID constraint, the resource ID constraint is used.
      *
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testResourceIdConstraintOverridesDefaultIdConstraint($method, $url)
@@ -819,8 +758,6 @@ class Test extends TestCase
     /**
      * If there is a default and a resource ID constraint, the resource ID constraint is used.
      *
-     * @param $method
-     * @param $url
      * @dataProvider recordProvider
      */
     public function testFluentResourceIdConstraintOverridesDefaultIdConstraint($method, $url)
@@ -839,7 +776,7 @@ class Test extends TestCase
     /**
      * @return array
      */
-    public function multiWordProvider()
+    public static function multiWordProvider()
     {
         return [
             ['end-users'],
@@ -849,8 +786,8 @@ class Test extends TestCase
     }
 
     /**
-     * @param $resourceType
      * @dataProvider multiWordProvider
+     *
      * @see https://github.com/cloudcreativity/laravel-json-api/issues/224
      */
     public function testMultiWordResourceType($resourceType)
@@ -864,11 +801,10 @@ class Test extends TestCase
 
         $base = "/api/v1/$resourceType";
 
-        $this->assertMatch('GET', $base, '\\' . JsonApiController::class . '@index');
+        $this->assertMatch('GET', $base, '\\'.JsonApiController::class.'@index');
     }
 
     /**
-     * @param $relationship
      * @dataProvider multiWordProvider
      */
     public function testMultiWordRelationship($relationship)
@@ -882,14 +818,11 @@ class Test extends TestCase
         $self = "/api/v1/posts/1/relationships/{$relationship}";
         $related = "/api/v1/posts/1/{$relationship}";
 
-        $this->assertMatch('GET', $self, '\\' . JsonApiController::class . '@readRelationship');
-        $this->assertMatch('GET', $related, '\\' . JsonApiController::class . '@readRelatedResource');
+        $this->assertMatch('GET', $self, '\\'.JsonApiController::class.'@readRelationship');
+        $this->assertMatch('GET', $related, '\\'.JsonApiController::class.'@readRelatedResource');
     }
 
-    /**
-     * @return array
-     */
-    public function processProvider(): array
+    public static function processProvider(): array
     {
         return [
             'fetch-many' => ['GET', '/api/v1/photos/queue-jobs', '@processes'],
@@ -898,9 +831,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param string $method
-     * @param string $url
-     * @param string $action
      * @dataProvider processProvider
      */
     public function testAsync(string $method, string $url, string $action): void
@@ -911,13 +841,10 @@ class Test extends TestCase
             ]);
         }, ['id' => '^\d+$']);
 
-        $this->assertMatch($method, $url, '\\' . JsonApiController::class . $action);
+        $this->assertMatch($method, $url, '\\'.JsonApiController::class.$action);
     }
 
     /**
-     * @param string $method
-     * @param string $url
-     * @param string $action
      * @dataProvider processProvider
      */
     public function testFluentAsync(string $method, string $url, string $action): void
@@ -926,7 +853,7 @@ class Test extends TestCase
             $api->resource('photos')->async();
         });
 
-        $this->assertMatch($method, $url, '\\' . JsonApiController::class . $action);
+        $this->assertMatch($method, $url, '\\'.JsonApiController::class.$action);
     }
 
     /**
@@ -971,9 +898,7 @@ class Test extends TestCase
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param int $expected
+     * @param  int  $expected
      */
     private function assertRoute($method, $url, $expected = 200)
     {
@@ -986,20 +911,14 @@ class Test extends TestCase
         }
     }
 
-    /**
-     * @param array $routes
-     */
     private function assertRoutes(array $routes)
     {
-        foreach ($routes as list($method, $url, $expected)) {
+        foreach ($routes as [$method, $url, $expected]) {
             $this->assertRoute($method, $url, $expected);
         }
     }
 
     /**
-     * @param $method
-     * @param $url
-     * @param $expected
      * @return \Illuminate\Routing\Route
      */
     private function assertMatch($method, $url, $expected = null)
@@ -1025,10 +944,6 @@ class Test extends TestCase
         return $route;
     }
 
-    /**
-     * @param $method
-     * @param $url
-     */
     private function assertMethodNotAllowed($method, $url)
     {
         $request = $this->createRequest($method, $url);
@@ -1043,10 +958,6 @@ class Test extends TestCase
         $this->assertTrue($notAllowed, "Route $method $url is allowed");
     }
 
-    /**
-     * @param $method
-     * @param $url
-     */
     private function assertNotFound($method, $url)
     {
         $request = $this->createRequest($method, $url);
@@ -1062,8 +973,6 @@ class Test extends TestCase
     }
 
     /**
-     * @param $method
-     * @param $url
      * @return Request
      */
     private function createRequest($method, $url)

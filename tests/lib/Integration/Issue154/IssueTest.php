@@ -33,9 +33,6 @@ class IssueTest extends TestCase
      */
     protected $appRoutes = false;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -48,7 +45,7 @@ class IssueTest extends TestCase
     /**
      * @return array
      */
-    public function createProvider()
+    public static function createProvider()
     {
         return [
             ['saving', ['creating', 'saved', 'created']],
@@ -59,9 +56,6 @@ class IssueTest extends TestCase
     }
 
     /**
-     * @param $hook
-     * @param  array  $unexpected
-     *
      * @dataProvider createProvider
      */
     public function testCreate($hook, array $unexpected)
@@ -91,7 +85,7 @@ class IssueTest extends TestCase
     /**
      * @return array
      */
-    public function updateProvider()
+    public static function updateProvider()
     {
         return [
             ['saving', ['updating', 'saved', 'updated']],
@@ -102,9 +96,6 @@ class IssueTest extends TestCase
     }
 
     /**
-     * @param $hook
-     * @param  array  $unexpected
-     *
      * @dataProvider updateProvider
      */
     public function testUpdate($hook, array $unexpected)
@@ -125,7 +116,7 @@ class IssueTest extends TestCase
     /**
      * @return array
      */
-    public function deleteProvider()
+    public static function deleteProvider()
     {
         return [
             ['deleting', ['deleted']],
@@ -134,9 +125,6 @@ class IssueTest extends TestCase
     }
 
     /**
-     * @param $hook
-     * @param  array  $unexpected
-     *
      * @dataProvider deleteProvider
      */
     public function testDelete($hook, array $unexpected)
@@ -147,7 +135,6 @@ class IssueTest extends TestCase
     }
 
     /**
-     * @param $hook
      * @param  array  $unexpected
      *      hooks that must not be invoked.
      * @return $this

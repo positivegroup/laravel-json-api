@@ -22,23 +22,21 @@ use ArrayIterator;
 use CloudCreativity\LaravelJsonApi\Contracts\Object\ResourceIdentifierCollectionInterface;
 use CloudCreativity\LaravelJsonApi\Contracts\Object\ResourceIdentifierInterface;
 use InvalidArgumentException;
+use Traversable;
 
 /**
  * Class ResourceIdentifierCollection
  *
- * @package CloudCreativity\LaravelJsonApi
  * @deprecated 2.0.0
  */
 class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterface
 {
-
     /**
      * @var array
      */
     private $stack = [];
 
     /**
-     * @param array $identifiers
      * @return ResourceIdentifierCollection
      */
     public static function fromArray(array $identifiers)
@@ -52,21 +50,17 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
         return $collection;
     }
 
-    /**
-     * @param array $identifiers
-     */
     public function __construct(array $identifiers = [])
     {
         $this->addMany($identifiers);
     }
 
     /**
-     * @param ResourceIdentifierInterface $identifier
      * @return $this
      */
     public function add(ResourceIdentifierInterface $identifier)
     {
-        if (!$this->has($identifier)) {
+        if (! $this->has($identifier)) {
             $this->stack[] = $identifier;
         }
 
@@ -74,7 +68,6 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
     }
 
     /**
-     * @param ResourceIdentifierInterface $identifier
      * @return bool
      */
     public function has(ResourceIdentifierInterface $identifier)
@@ -83,14 +76,12 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
     }
 
     /**
-     * @param array $identifiers
      * @return $this
      */
     public function addMany(array $identifiers)
     {
         foreach ($identifiers as $identifier) {
-
-            if (!$identifier instanceof ResourceIdentifierInterface) {
+            if (! $identifier instanceof ResourceIdentifierInterface) {
                 throw new InvalidArgumentException('Expecting only identifier objects.');
             }
 
@@ -101,7 +92,6 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
     }
 
     /**
-     * @param array $identifiers
      * @return $this
      */
     public function setAll(array $identifiers)
@@ -124,15 +114,12 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
     /**
      * @return ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->getAll());
     }
 
-    /**
-     * @return int
-     */
-    public function count()
+    public function count(): int
     {
         return count($this->stack);
     }
@@ -152,8 +139,7 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
     {
         /** @var ResourceIdentifier $identifier */
         foreach ($this as $identifier) {
-
-            if (!$identifier->isComplete()) {
+            if (! $identifier->isComplete()) {
                 return false;
             }
         }
@@ -162,15 +148,13 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
     }
 
     /**
-     * @param $typeOrTypes
      * @return bool
      */
     public function isOnly($typeOrTypes)
     {
         /** @var ResourceIdentifier $identifier */
         foreach ($this as $identifier) {
-
-            if (!$identifier->isType($typeOrTypes)) {
+            if (! $identifier->isType($typeOrTypes)) {
                 return false;
             }
         }
@@ -179,7 +163,6 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
     }
 
     /**
-     * @param array|null $typeMap
      * @return array
      */
     public function map(array $typeMap = null)
@@ -188,10 +171,9 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
 
         /** @var ResourceIdentifier $identifier */
         foreach ($this as $identifier) {
-
             $key = is_array($typeMap) ? $identifier->mapType($typeMap) : $identifier->getType();
 
-            if (!isset($ret[$key])) {
+            if (! isset($ret[$key])) {
                 $ret[$key] = [];
             }
 
@@ -228,9 +210,7 @@ class ResourceIdentifierCollection implements ResourceIdentifierCollectionInterf
         return $ids;
     }
 
-
     /**
-     * @param array $input
      * @return ResourceIdentifierCollection
      */
     public static function create(array $input)

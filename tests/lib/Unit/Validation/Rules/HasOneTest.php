@@ -22,11 +22,7 @@ use CloudCreativity\LaravelJsonApi\Tests\Unit\TestCase;
 
 class HasOneTest extends TestCase
 {
-
-    /**
-     * @return array
-     */
-    public function validProvider(): array
+    public static function validProvider(): array
     {
         return [
             'null' => [
@@ -52,10 +48,7 @@ class HasOneTest extends TestCase
         ];
     }
 
-    /**
-     * @return array
-     */
-    public function invalidProvider(): array
+    public static function invalidProvider(): array
     {
         return [
             'empty has-many' => [
@@ -80,8 +73,6 @@ class HasOneTest extends TestCase
     }
 
     /**
-     * @param $types
-     * @param $value
      * @dataProvider validProvider
      */
     public function testValid($types, $value): void
@@ -101,8 +92,6 @@ class HasOneTest extends TestCase
     }
 
     /**
-     * @param $types
-     * @param $value
      * @dataProvider invalidProvider
      */
     public function testInvalid($types, $value): void

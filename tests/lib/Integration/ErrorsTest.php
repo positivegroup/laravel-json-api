@@ -17,13 +17,11 @@
 
 namespace CloudCreativity\LaravelJsonApi\Tests\Integration;
 
-use Carbon\Carbon;
 use CloudCreativity\LaravelJsonApi\Exceptions\DocumentRequiredException;
 use CloudCreativity\LaravelJsonApi\Exceptions\InvalidJsonException;
 use CloudCreativity\LaravelJsonApi\Exceptions\ResourceNotFoundException;
 use DummyApp\Post;
 use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\MessageBag;
@@ -39,9 +37,6 @@ class ErrorsTest extends TestCase
      */
     protected $resourceType = 'posts';
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -72,7 +67,7 @@ class ErrorsTest extends TestCase
     /**
      * @return array
      */
-    public function invalidDocumentProvider()
+    public static function invalidDocumentProvider()
     {
         return [
             'empty' => [''],
@@ -120,7 +115,7 @@ class ErrorsTest extends TestCase
     /**
      * @return array
      */
-    public function ignoreDocumentProvider()
+    public static function ignoreDocumentProvider()
     {
         return [
             'empty' => [''],
@@ -134,9 +129,6 @@ class ErrorsTest extends TestCase
     }
 
     /**
-     * @param $content
-     * @param $method
-     *
      * @dataProvider ignoreDocumentProvider
      */
     public function testIgnoresData($content, $method = 'GET')
@@ -262,7 +254,7 @@ class ErrorsTest extends TestCase
 
     public function testMaintenanceMode()
     {
-        $ex = new MaintenanceModeException(Carbon::now()->getTimestamp(), 60, "We'll be back soon.");
+        $ex = new HttpException(503, "We'll be back soon.");
 
         $this->request($ex)
             ->assertStatus(503)
@@ -375,7 +367,6 @@ class ErrorsTest extends TestCase
     }
 
     /**
-     * @param  \Exception  $ex
      * @return \CloudCreativity\LaravelJsonApi\Testing\TestResponse
      */
     private function request(\Exception $ex)
@@ -388,7 +379,6 @@ class ErrorsTest extends TestCase
     }
 
     /**
-     * @param $key
      * @return array
      */
     private function withCustomError($key)
@@ -402,9 +392,6 @@ class ErrorsTest extends TestCase
     }
 
     /**
-     * @param $uri
-     * @param $content
-     * @param $method
      * @return \Illuminate\Foundation\Testing\TestResponse
      */
     private function doInvalidRequest($uri, $content, $method = 'POST')

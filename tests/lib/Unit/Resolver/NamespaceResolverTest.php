@@ -23,11 +23,10 @@ use PHPUnit\Framework\TestCase;
 
 class NamespaceResolverTest extends TestCase
 {
-
     /**
      * @return array
      */
-    public function byResourceProvider()
+    public static function byResourceProvider()
     {
         return [
             [
@@ -66,7 +65,7 @@ class NamespaceResolverTest extends TestCase
     /**
      * @return array
      */
-    public function notByResourceProvider()
+    public static function notByResourceProvider()
     {
         return [
             [
@@ -105,7 +104,7 @@ class NamespaceResolverTest extends TestCase
     /**
      * @return array
      */
-    public function genericAuthorizerProvider()
+    public static function genericAuthorizerProvider()
     {
         return [
             // By resource
@@ -151,9 +150,6 @@ class NamespaceResolverTest extends TestCase
     }
 
     /**
-     * @param $resourceType
-     * @param $type
-     * @param $namespace
      * @dataProvider byResourceProvider
      */
     public function testByResource($resourceType, $type, $namespace)
@@ -164,22 +160,16 @@ class NamespaceResolverTest extends TestCase
     }
 
     /**
-     * @param $resourceType
-     * @param $type
-     * @param $singular
      * @dataProvider notByResourceProvider
      */
     public function testNotByResource($resourceType, $type, $singular)
     {
         $resolver = $this->createResolver(false);
 
-        $this->assertUnitNamespace($resolver, $resourceType, $type,  'App\JsonApi', $singular);
+        $this->assertUnitNamespace($resolver, $resourceType, $type, 'App\JsonApi', $singular);
     }
 
     /**
-     * @param $resourceType
-     * @param $type
-     * @param $singular
      * @dataProvider notByResourceProvider
      */
     public function testNotByResourceWithoutType($resourceType, $type, $singular)
@@ -205,10 +195,6 @@ class NamespaceResolverTest extends TestCase
     }
 
     /**
-     * @param $name
-     * @param $expected
-     * @param $byResource
-     * @param $withType
      * @dataProvider genericAuthorizerProvider
      */
     public function testNamedAuthorizer($name, $expected, $byResource, $withType = true)
@@ -227,8 +213,8 @@ class NamespaceResolverTest extends TestCase
     }
 
     /**
-     * @param bool $byResource
-     * @param bool $withType
+     * @param  bool  $byResource
+     * @param  bool  $withType
      * @return NamespaceResolver
      */
     private function createResolver($byResource = true, $withType = true)
@@ -240,14 +226,7 @@ class NamespaceResolverTest extends TestCase
     }
 
     /**
-     * @param ResolverInterface $resolver
-     * @param $resourceType
-     * @param $type
-     * @param $schema
-     * @param $adapter
-     * @param $validator
-     * @param $auth
-     * @param $contentNegotiator
+     * @param  ResolverInterface  $resolver
      */
     private function assertResolver(
         $resolver,
@@ -259,7 +238,7 @@ class NamespaceResolverTest extends TestCase
         $auth,
         $contentNegotiator
     ) {
-        $exists = !is_null($type);
+        $exists = ! is_null($type);
 
         $this->assertSame($exists, $resolver->isType($type));
         $this->assertSame($exists, $resolver->isResourceType($resourceType));
@@ -282,12 +261,6 @@ class NamespaceResolverTest extends TestCase
         $this->assertSame($contentNegotiator, $resolver->getContentNegotiatorByResourceType($resourceType));
     }
 
-    /**
-     * @param $resolver
-     * @param $resourceType
-     * @param $type
-     * @param $namespace
-     */
     private function assertResourceNamespace($resolver, $resourceType, $type, $namespace)
     {
         $this->assertResolver(
@@ -302,13 +275,6 @@ class NamespaceResolverTest extends TestCase
         );
     }
 
-    /**
-     * @param $resolver
-     * @param $resourceType
-     * @param $type
-     * @param $namespace
-     * @param $singular
-     */
     private function assertUnitNamespace($resolver, $resourceType, $type, $namespace, $singular)
     {
         $this->assertResolver(
@@ -323,13 +289,6 @@ class NamespaceResolverTest extends TestCase
         );
     }
 
-    /**
-     * @param $resolver
-     * @param $resourceType
-     * @param $type
-     * @param $namespace
-     * @param $singular
-     */
     private function assertUnitNamespaceWithoutType($resolver, $resourceType, $type, $namespace, $singular)
     {
         $this->assertResolver(

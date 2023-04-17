@@ -32,9 +32,6 @@ class ResourceObjectTest extends TestCase
      */
     private $resource;
 
-    /**
-     * @return void
-     */
     protected function setUp(): void
     {
         parent::setUp();
@@ -151,8 +148,6 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param  array  $expected
-     *
      * @depends testFields
      */
     public function testGetValue(array $expected): void
@@ -222,10 +217,7 @@ class ResourceObjectTest extends TestCase
         $this->resource['foo'] = 'bar';
     }
 
-    /**
-     * @return array
-     */
-    public function pointerProvider(): array
+    public static function pointerProvider(): array
     {
         return [
             ['type', '/type'],
@@ -241,9 +233,6 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param  string  $key
-     * @param  string  $expected
-     *
      * @dataProvider pointerProvider
      */
     public function testPointer(string $key, string $expected): void
@@ -253,9 +242,6 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param  string  $key
-     * @param  string  $expected
-     *
      * @dataProvider pointerProvider
      */
     public function testPointerWithPrefix(string $key, string $expected): void
@@ -266,10 +252,7 @@ class ResourceObjectTest extends TestCase
         $this->assertSame($expected, $this->resource->pointer($key, '/data'));
     }
 
-    /**
-     * @return array
-     */
-    public function pointerForRelationshipProvider(): array
+    public static function pointerForRelationshipProvider(): array
     {
         return [
             ['author', null],
@@ -280,10 +263,6 @@ class ResourceObjectTest extends TestCase
     }
 
     /**
-     * @param  string  $key
-     * @param  string|null  $expected
-     * @return void
-     *
      * @dataProvider pointerForRelationshipProvider
      */
     public function testPointerForRelationship(string $key, ?string $expected): void

@@ -81,14 +81,8 @@ class ClientJob extends Model implements AsynchronousProcess
         'failed' => 'boolean',
         'timeout' => 'integer',
         'tries' => 'integer',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $dates = [
-        'completed_at',
-        'timeout_at',
+        'completed_at' => 'datetime',
+        'timeout_at' => 'datetime',
     ];
 
     /**
@@ -171,10 +165,6 @@ class ClientJob extends Model implements AsynchronousProcess
         ]);
     }
 
-    /**
-     * @param  bool  $success
-     * @return void
-     */
     public function completed(bool $success = true): void
     {
         $this->update([
@@ -184,9 +174,6 @@ class ClientJob extends Model implements AsynchronousProcess
         ]);
     }
 
-    /**
-     * @return Api
-     */
     public function getApi(): Api
     {
         if (! $api = $this->api) {
@@ -200,7 +187,6 @@ class ClientJob extends Model implements AsynchronousProcess
      * Set the resource that the client job relates to.
      *
      * @param  mixed  $resource
-     * @return ClientJob
      */
     public function setResource($resource): ClientJob
     {

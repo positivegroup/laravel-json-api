@@ -22,16 +22,13 @@ use Neomerx\JsonApi\Document\Link;
 
 /**
  * Class UrlTest
- *
- * @package CloudCreativity\LaravelJsonApi
  */
 class UrlAndLinksTest extends TestCase
 {
-
     /**
      * @return array
      */
-    public function urlProvider()
+    public static function urlProvider()
     {
         return [
             ['/api/v1/posts', 'index'],
@@ -48,10 +45,6 @@ class UrlAndLinksTest extends TestCase
     }
 
     /**
-     * @param $expected
-     * @param $method
-     * @param $resourceId
-     * @param $relationship
      * @dataProvider urlProvider
      */
     public function testUrl($expected, $method, $resourceId = null, $relationship = null)
@@ -63,10 +56,6 @@ class UrlAndLinksTest extends TestCase
     }
 
     /**
-     * @param $expected
-     * @param $method
-     * @param $resourceId
-     * @param $relationship
      * @dataProvider urlProvider
      */
     public function testLink($expected, $method, $resourceId = null, $relationship = null)
@@ -79,10 +68,6 @@ class UrlAndLinksTest extends TestCase
     }
 
     /**
-     * @param $expected
-     * @param $method
-     * @param $resourceId
-     * @param $relationship
      * @dataProvider urlProvider
      */
     public function testLinkWithMeta($expected, $method, $resourceId = null, $relationship = null)
@@ -97,13 +82,11 @@ class UrlAndLinksTest extends TestCase
     }
 
     /**
-     * @param $resourceId
-     * @param $relationship
      * @return array
      */
     private function normalizeArgs($resourceId, $relationship)
     {
-        if (!$relationship) {
+        if (! $relationship) {
             $args = $resourceId ? ['posts', $resourceId] : ['posts'];
         } else {
             $args = ['posts', $resourceId, $relationship];

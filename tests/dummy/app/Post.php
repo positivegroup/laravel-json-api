@@ -45,9 +45,9 @@ class Post extends Model
     /**
      * @var array
      */
-    protected $dates = [
-        'published_at',
-        'deleted_at',
+    protected $casts = [
+        'published_at' => 'datetime',
+        'deleted_at' => 'datetime',
     ];
 
     /**
@@ -90,8 +90,6 @@ class Post extends Model
      * - have a tag in common with the provided post; or
      * - are by the same author.
      *
-     * @param  Builder  $query
-     * @param  Post  $post
      * @return Builder
      */
     public function scopeRelated(Builder $query, Post $post)
@@ -103,11 +101,6 @@ class Post extends Model
         })->where('posts.id', '<>', $post->getKey());
     }
 
-    /**
-     * @param  Builder  $query
-     * @param  bool  $published
-     * @return Builder
-     */
     public function scopePublished(Builder $query, bool $published = true): Builder
     {
         if ($published) {
@@ -119,11 +112,6 @@ class Post extends Model
         return $query;
     }
 
-    /**
-     * @param  Builder  $query
-     * @param  string  $title
-     * @return Builder
-     */
     public function scopeLikeTitle(Builder $query, string $title): Builder
     {
         return $query->where('title', 'like', $title.'%');

@@ -28,9 +28,6 @@ class QueryValidationTest extends TestCase
      */
     protected $resourceType;
 
-    /**
-     * @return void
-     */
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -40,7 +37,7 @@ class QueryValidationTest extends TestCase
     /**
      * @return array
      */
-    public function searchProvider()
+    public static function searchProvider()
     {
         return [
             'fields:not allowed (singular)' => [
@@ -81,7 +78,7 @@ class QueryValidationTest extends TestCase
             'page:invalid' => [
                 ['page' => ['number' => 0, 'size' => 10]],
                 'page.number',
-                'The page.number must be at least 1.',
+                'The page.number field must be at least 1.',
             ],
             'page:not allowed (singular)' => [
                 ['page' => ['foo' => 'bar', 'size' => 10]],
@@ -107,10 +104,6 @@ class QueryValidationTest extends TestCase
     }
 
     /**
-     * @param  array  $params
-     * @param  string  $param
-     * @param  string  $detail
-     *
      * @dataProvider searchProvider
      */
     public function testSearch(array $params, string $param, string $detail)
@@ -151,10 +144,6 @@ class QueryValidationTest extends TestCase
     }
 
     /**
-     * @param  array  $params
-     * @param  string  $param
-     * @param  string  $detail
-     *
      * @dataProvider searchProvider
      */
     public function testSearchRelated(array $params, string $param, string $detail)

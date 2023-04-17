@@ -26,16 +26,15 @@ use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Support\MessageProvider;
 use IteratorAggregate;
 use Neomerx\JsonApi\Contracts\Document\ErrorInterface;
+use Traversable;
 
 /**
  * Class AbstractErrorBag
  *
- * @package CloudCreativity\LaravelJsonApi
  * @deprecated 2.0.0 use the error translator instead.
  */
 abstract class AbstractErrorBag implements Countable, IteratorAggregate, MessageProvider, Arrayable
 {
-
     /**
      * @var MessageBag
      */
@@ -44,16 +43,14 @@ abstract class AbstractErrorBag implements Countable, IteratorAggregate, Message
     /**
      * Create a JSON API error for the supplied message key and detail.
      *
-     * @param string $key
-     * @param string $detail
+     * @param  string  $key
+     * @param  string  $detail
      * @return ErrorInterface
      */
     abstract protected function createError($key, $detail);
 
     /**
      * AbstractErrorBag constructor.
-     *
-     * @param MessageBag $messages
      */
     public function __construct(MessageBag $messages)
     {
@@ -63,7 +60,7 @@ abstract class AbstractErrorBag implements Countable, IteratorAggregate, Message
     /**
      * @return Generator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         foreach ($this->messages->toArray() as $key => $messages) {
             foreach ($messages as $detail) {
@@ -72,10 +69,7 @@ abstract class AbstractErrorBag implements Countable, IteratorAggregate, Message
         }
     }
 
-    /**
-     * @return int
-     */
-    public function count()
+    public function count(): int
     {
         return $this->messages->count();
     }
@@ -106,6 +100,7 @@ abstract class AbstractErrorBag implements Countable, IteratorAggregate, Message
 
     /**
      * @return ErrorInterface[]
+     *
      * @deprecated use `all`
      */
     public function toArray()

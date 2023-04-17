@@ -30,7 +30,7 @@ class ResourceValidationTest extends TestCase
     /**
      * @return array
      */
-    public function postProvider()
+    public static function postProvider()
     {
         return [
             'data:required' => [
@@ -397,7 +397,7 @@ class ResourceValidationTest extends TestCase
     /**
      * @return array
      */
-    public function patchProvider()
+    public static function patchProvider()
     {
         return [
             'data.id:required' => [
@@ -478,9 +478,6 @@ class ResourceValidationTest extends TestCase
     }
 
     /**
-     * @param $data
-     * @param  array  $error
-     *
      * @dataProvider postProvider
      */
     public function testPost($data, array $error)
@@ -490,9 +487,6 @@ class ResourceValidationTest extends TestCase
     }
 
     /**
-     * @param $data
-     * @param  array  $error
-     *
      * @dataProvider patchProvider
      */
     public function testPatch($data, array $error)
