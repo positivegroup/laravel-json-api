@@ -20,6 +20,7 @@ namespace CloudCreativity\LaravelJsonApi\Resolver;
 use CloudCreativity\LaravelJsonApi\Contracts\Resolver\ResolverInterface;
 use CloudCreativity\LaravelJsonApi\Exceptions\RuntimeException;
 use IteratorAggregate;
+use Traversable;
 
 class AggregateResolver implements ResolverInterface, IteratorAggregate
 {
@@ -75,7 +76,7 @@ class AggregateResolver implements ResolverInterface, IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         yield $this->api;
 

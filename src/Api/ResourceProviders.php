@@ -22,6 +22,7 @@ use CloudCreativity\LaravelJsonApi\Factories\Factory;
 use CloudCreativity\LaravelJsonApi\Routing\RouteRegistrar;
 use Illuminate\Contracts\Routing\Registrar;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Class ResourceProviders
@@ -81,7 +82,7 @@ final class ResourceProviders implements IteratorAggregate
     /**
      * @inheritDoc
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         foreach ($this->providers as $provider) {
             yield $provider => $this->factory->createResourceProvider($provider);

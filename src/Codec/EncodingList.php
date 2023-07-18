@@ -20,6 +20,7 @@ namespace CloudCreativity\LaravelJsonApi\Codec;
 use Neomerx\JsonApi\Contracts\Http\Headers\AcceptHeaderInterface;
 use Neomerx\JsonApi\Contracts\Http\Headers\MediaTypeInterface;
 use Neomerx\JsonApi\Http\Headers\MediaType;
+use Traversable;
 
 /**
  * Class EncodingList
@@ -242,7 +243,7 @@ class EncodingList implements \IteratorAggregate, \Countable
     /**
      * @inheritDoc
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new \ArrayIterator($this->stack);
     }

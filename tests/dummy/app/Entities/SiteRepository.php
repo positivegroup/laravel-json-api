@@ -19,6 +19,7 @@ namespace DummyApp\Entities;
 
 use Generator;
 use IteratorAggregate;
+use Traversable;
 
 class SiteRepository implements IteratorAggregate
 {
@@ -80,7 +81,7 @@ class SiteRepository implements IteratorAggregate
     /**
      * @return Generator
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         foreach ($this->sites as $slug => $values) {
             yield $slug => Site::create($slug, $values);

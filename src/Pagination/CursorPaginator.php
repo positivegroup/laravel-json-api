@@ -20,6 +20,7 @@ namespace CloudCreativity\LaravelJsonApi\Pagination;
 use Countable;
 use Illuminate\Database\Eloquent\Collection;
 use IteratorAggregate;
+use Traversable;
 
 /**
  * Class CursorPaginator
@@ -146,7 +147,7 @@ class CursorPaginator implements IteratorAggregate, Countable
     /**
      * @inheritDoc
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return $this->items;
     }
