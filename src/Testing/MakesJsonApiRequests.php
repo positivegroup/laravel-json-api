@@ -173,7 +173,7 @@ trait MakesJsonApiRequests
      * @param $response
      * @return TestResponse
      */
-    protected function createTestResponse($response)
+    protected function createTestResponse($response, $request)
     {
         return new TestResponse($response, $this->expectedResourceType());
     }
