@@ -54,7 +54,7 @@
         "neomerx/json-api": "dev-v1.x-php81",
         "nyholm/psr7": "^1.5",
         "ramsey/uuid": "^3.0|^4.0",
-        "symfony/psr-http-message-bridge": "^2.0"
+        "symfony/psr-http-message-bridge": "^2.0|^7.0"
     },
     "require-dev": {
         "ext-sqlite3": "*",
